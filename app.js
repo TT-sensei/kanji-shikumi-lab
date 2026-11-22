@@ -185,6 +185,9 @@ function gotoKanji(target){
   }
   startPlay("bunkai", target.kanji);
 }
+function chantBox(rec, withExpl){
+  return `<div class="info-box"><div class="ib-title">おぼえうた（唱え方）</div><div class="chant">${esc(chantOf(rec))}</div>${withExpl && explOf(rec) ? `<div class="ib-sub">${esc(explOf(rec))}</div>` : ""}</div>`;
+}
 function formulaOf(rec){
   return rec.components.map(c => labelOf(c)).join(" ＋ ") + " ＝ " + rec.kanji;
 }
@@ -318,8 +321,7 @@ function playBunkai(rec){
       <div class="formula">${esc(formulaOf(rec))}</div>
       <div class="ib-sub">${radLine}</div>
       ${info}
-      <div class="info-box"><div class="ib-title">となえかた（唱え方）</div><div class="chant">${esc(chantOf(rec))}</div>
-      ${explOf(rec) ? `<div class="ib-sub">${esc(explOf(rec))}</div>` : ""}</div>
+      ${chantBox(rec, true)}
       ${ex ? `<div class="info-box"><div class="ib-title">れいぶん</div><div class="ib-main" style="font-size:19px">${esc(ex.s)}</div><div class="ib-sub">${esc(ex.r)}</div></div>` : ""}
       <div id="bunkaiResult"></div>`;
   }
@@ -421,6 +423,7 @@ function playKumitate(rec){
   function renderAll(){ renderSlots(); renderPalette(); }
   panel.innerHTML = `
     <div class="info-box"><div class="ib-title">やり方</div><div class="ib-sub">読みと 文を ヒントに、正しい パーツを 選んで 置こう。パーツの 置く 場所（うえ・した・ひだり・みぎ）も 合わせてね。</div></div>
+    ${chantBox(rec, false)}
     <div class="palette" id="palette"></div>
     <div id="judgeArea"><button class="bigbtn" id="btnJudge" disabled>できた！</button></div>`;
   renderAll();
@@ -431,8 +434,7 @@ function playKumitate(rec){
       store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
       sndGood(); burst();
       stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="result-good">「${rec.kanji}」が できた！ マスター ★</div>`;
-      panel.innerHTML = `<div class="info-box"><div class="ib-title">となえかた</div><div class="chant">${esc(chantOf(rec))}</div>
-        ${explOf(rec) ? `<div class="ib-sub">${esc(explOf(rec))}</div>` : ""}</div>` + finishPanel("");
+      panel.innerHTML = chantBox(rec, true) + finishPanel("");
       wireFinish();
       document.getElementById("playProgress").textContent = `くみたて ${modeCount("kumitate")} / ${DATA.length}`;
     } else {
@@ -453,7 +455,7 @@ function playKozo(rec){
   const panel = document.getElementById("playPanel");
   stage.innerHTML = svgKanji(rec, {}) + `<div class="ib-sub">この 漢字の つくりは どれかな？</div>`;
   panel.innerHTML = `<div class="opt-grid">${STRUCT_ORDER.map(s =>
-    `<button class="optbtn" data-s="${s}">${STRUCT_JA[s]}</button>`).join("")}</div><div id="kozoResult"></div>`;
+    `<button class="optbtn" data-s="${s}">${STRUCT_JA[s]}</button>`).join("")}</div>${chantBox(rec, false)}<div id="kozoResult"></div>`;
   panel.querySelectorAll(".optbtn").forEach(b => b.addEventListener("click", () => {
     if(b.dataset.s === rec.structure){
       b.classList.add("correct"); sndGood();
@@ -480,7 +482,7 @@ function playBushu(rec){
   const names = [...new Set(DATA.map(r => r.radicalName).filter(Boolean))].filter(n => n !== rec.radicalName);
   const opts = shuffle([rec.radicalName].concat(shuffle(names).slice(0, 3)));
   panel.innerHTML = `<div class="opt-grid">${opts.map(n =>
-    `<button class="optbtn" data-n="${esc(n)}">${esc(n)}</button>`).join("")}</div><div id="bushuResult"></div>`;
+    `<button class="optbtn" data-n="${esc(n)}">${esc(n)}</button>`).join("")}</div>${chantBox(rec, false)}<div id="bushuResult"></div>`;
   panel.querySelectorAll(".optbtn").forEach(b => b.addEventListener("click", () => {
     if(b.dataset.n === rec.radicalName){
       b.classList.add("correct"); sndGood();
