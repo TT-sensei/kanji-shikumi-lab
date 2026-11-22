@@ -12,7 +12,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from collections import Counter
 
-OUT = Path.home() / "workspace/shikumi-build/data"
+OUT = Path(__file__).resolve().parent.parent / "data"  # リポジトリ内の data/
 SVG = "{http://www.w3.org/2000/svg}"
 KVG = "{http://kanjivg.tagaini.net}"
 Path("/tmp/kanjiapp").mkdir(exist_ok=True)
@@ -272,3 +272,10 @@ for r in records:
 (OUT / "kanji1.json").write_text(json.dumps(records, ensure_ascii=False, indent=1), encoding="utf-8")
 (OUT / "radicals.json").write_text(json.dumps(RADICAL_NAMES, ensure_ascii=False, indent=1), encoding="utf-8")
 print("wrote kanji1.json", (OUT / "kanji1.json").stat().st_size, "bytes")
+# アプリが読む JS 版も同時生成する
+(OUT / "kanji1.js").write_text("window.KSL_G1=" + json.dumps(records, ensure_ascii=False) + ";", encoding="utf-8")
+_txt = Path(__file__).resolve().parent.parent / "original" / "text1.json"
+if _txt.exists():
+    _t = json.loads(_txt.read_text(encoding="utf-8"))
+    (_txt.parent / "text1.js").write_text("window.KSL_TEXT=" + json.dumps(_t, ensure_ascii=False) + ";", encoding="utf-8")
+    print("wrote kanji1.js and original/text1.js")

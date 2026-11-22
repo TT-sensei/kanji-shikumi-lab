@@ -77,19 +77,64 @@ function svgKanji(rec, opts){
   }).join("");
   return `<svg class="stage-svg ${opts.small ? "small" : ""}" viewBox="0 0 109 109" xmlns="http://www.w3.org/2000/svg">${groups}</svg>`;
 }
-function approxBBox(ds){
+function pathBBox(d){
+  const tokens = d.match(/[a-zA-Z]|-?\d+\.?\d*/g) || [];
   let minX = 1e9, minY = 1e9, maxX = -1e9, maxY = -1e9;
-  ds.forEach(d => {
-    const nums = d.match(/-?\d+\.?\d*/g) || [];
-    for(let i = 0; i + 1 < nums.length; i += 2){
-      const x = +nums[i], y = +nums[i+1];
-      if(x < minX) minX = x; if(x > maxX) maxX = x;
-      if(y < minY) minY = y; if(y > maxY) maxY = y;
+  let cx = 0, cy = 0, sx = 0, sy = 0, cmd = "", i = 0;
+  const add = (x, y) => { if(x < minX) minX = x; if(x > maxX) maxX = x; if(y < minY) minY = y; if(y > maxY) maxY = y; };
+  const num = () => parseFloat(tokens[i++]);
+  const isCmd = t => /^[a-zA-Z]$/.test(t);
+  while(i < tokens.length){
+    if(isCmd(tokens[i])){ cmd = tokens[i++]; if(cmd === "Z" || cmd === "z"){ cx = sx; cy = sy; } continue; }
+    const rel = cmd === cmd.toLowerCase();
+    const C = cmd.toUpperCase();
+    const px = v => rel ? cx + v : v, py = v => rel ? cy + v : v;
+    if(C === "M"){ const x = num(), y = num(); cx = px(x); cy = py(y); sx = cx; sy = cy; add(cx, cy); cmd = rel ? "l" : "L"; }
+    else if(C === "L"){ const x = num(), y = num(); cx = px(x); cy = py(y); add(cx, cy); }
+    else if(C === "H"){ const x = num(); cx = px(x); add(cx, cy); }
+    else if(C === "V"){ const y = num(); cy = py(y); add(cx, cy); }
+    else if(C === "C"){ const x1 = px(num()), y1 = py(num()), x2 = px(num()), y2 = py(num()), x = px(num()), y = py(num()); add(x1, y1); add(x2, y2); cx = x; cy = y; add(cx, cy); }
+    else if(C === "S"){ const x2 = px(num()), y2 = py(num()), x = px(num()), y = py(num()); add(x2, y2); cx = x; cy = y; add(cx, cy); }
+    else if(C === "Q"){ const x1 = px(num()), y1 = py(num()), x = px(num()), y = py(num()); add(x1, y1); cx = x; cy = y; add(cx, cy); }
+    else if(C === "T"){ const x = px(num()), y = py(num()); cx = x; cy = y; add(cx, cy); }
+    else if(C === "A"){ num(); num(); num(); num(); num(); const x = px(num()), y = py(num()); cx = x; cy = y; add(cx, cy); }
+    else { i++; }
+  }
+  if(minX > maxX) return {x:0, y:0, w:109, h:109};
+  return {x:minX, y:minY, w:maxX - minX, h:maxY - minY};
+}
+function bboxOf(comp){
+  let r = null;
+  comp.d.forEach(d => {
+    const b = pathBBox(d);
+    if(!r) r = {x:b.x, y:b.y, w:b.w, h:b.h};
+    else {
+      const x2 = Math.max(r.x + r.w, b.x + b.w), y2 = Math.max(r.y + r.h, b.y + b.h);
+      r.x = Math.min(r.x, b.x); r.y = Math.min(r.y, b.y); r.w = x2 - r.x; r.h = y2 - r.y;
     }
   });
-  if(minX > maxX){ minX = 0; minY = 0; maxX = 109; maxY = 109; }
+  return r || {x:0, y:0, w:109, h:109};
+}
+function posLabelFromCenter(cx, cy){
+  if(cy < 42) return "うえ";
+  if(cy > 67) return "した";
+  if(cx < 42) return "ひだり";
+  if(cx > 67) return "みぎ";
+  return "";
+}
+function approxBBox(ds){
+  let r = null;
+  ds.forEach(d => {
+    const b = pathBBox(d);
+    if(!r) r = {x:b.x, y:b.y, w:b.w, h:b.h};
+    else {
+      const x2 = Math.max(r.x + r.w, b.x + b.w), y2 = Math.max(r.y + r.h, b.y + b.h);
+      r.x = Math.min(r.x, b.x); r.y = Math.min(r.y, b.y); r.w = x2 - r.x; r.h = y2 - r.y;
+    }
+  });
+  if(!r) r = {x:0, y:0, w:109, h:109};
   const pad = 7;
-  return `${minX - pad} ${minY - pad} ${(maxX - minX) + pad * 2} ${(maxY - minY) + pad * 2}`;
+  return `${r.x - pad} ${r.y - pad} ${r.w + pad * 2} ${r.h + pad * 2}`;
 }
 function svgPart(comp, color){
   return `<svg viewBox="${approxBBox(comp.d)}" xmlns="http://www.w3.org/2000/svg"><g fill="none" stroke="${color || "#26304d"}" stroke-width="4.4" stroke-linecap="round" stroke-linejoin="round">${pathsOf(comp)}</g></svg>`;
@@ -287,17 +332,24 @@ function playKumitate(rec){
   stage.innerHTML = `
     <div class="prompt-reading">${rec.on.map(esc).join("・")}${rec.on.length && rec.kun.length ? " ／ " : ""}${rec.kun.map(esc).join("・")}</div>
     ${ex ? `<div class="prompt-ex">${exBlank}<br><span style="font-size:15px">${esc(ex.r).replace(rec.kanji, "〇")}</span></div>` : ""}
-    <div class="slots ${rec.structure === "vertical" ? "vertical" : ""}" id="slots"></div>
-    <div class="ib-sub">右の パーツを タップ → 置く 場所を タップ</div>`;
+    <div class="slotframe" id="slots"></div>
+    <div class="ib-sub">パーツを タップ → 置く 場所を タップ</div>`;
   function renderSlots(){
     const sl = document.getElementById("slots");
     sl.innerHTML = rec.components.map((c, i) => {
+      const b = bboxOf(c);
+      const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
+      const wPct = Math.max(b.w, 30) / 109 * 100;
+      const hPct = Math.max(b.h, 30) / 109 * 100;
+      const left = Math.min(Math.max(cx / 109 * 100 - wPct / 2, 0), 100 - wPct);
+      const top = Math.min(Math.max(cy / 109 * 100 - hPct / 2, 0), 100 - hPct);
       const p = placed[i];
-      return `<button class="slot ${p ? "filled" : ""}" data-slot="${i}">
-        <span class="slot-pos">${POS_JA[c.pos] || ""}</span>
-        ${p ? svgPart(p, COMP_COLORS[rec.components.findIndex(x => x.el === p.el && x.pos === p.pos)]) : ""}</button>`;
+      const label = c.pos ? POS_JA[c.pos] : posLabelFromCenter(cx, cy);
+      return `<button class="slot2 ${p ? "filled" : ""}" data-slot="${i}" style="left:${left}%;top:${top}%;width:${wPct}%;height:${hPct}%">
+        <span class="slot-pos">${label}</span>
+        ${p ? svgPart(p, COMP_COLORS[i % COMP_COLORS.length]) : ""}</button>`;
     }).join("");
-    sl.querySelectorAll(".slot").forEach(s => s.addEventListener("click", () => {
+    sl.querySelectorAll(".slot2").forEach(s => s.addEventListener("click", () => {
       const i = +s.dataset.slot;
       if(placed[i]){ placed[i] = null; selected = null; renderAll(); sndTap(); return; }
       if(selected){ placed[i] = selected; selected = null; renderAll(); sndTap(); }
@@ -323,9 +375,8 @@ function playKumitate(rec){
     <div id="judgeArea"><button class="bigbtn" id="btnJudge" disabled>できた！</button></div>`;
   renderAll();
   document.getElementById("btnJudge").addEventListener("click", () => {
-    const expected = own.map(p => p.key).sort().join(",");
-    const got = placed.map(p => p.key).sort().join(",");
-    if(got === expected){
+    const allOk = placed.every((p, i) => p && p.key === own[i].key);
+    if(allOk){
       setSt(rec.kanji, "k");
       store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
       sndGood(); burst();
@@ -337,12 +388,8 @@ function playKumitate(rec){
     } else {
       sndBad();
       if(!store.mistakes.includes(rec.kanji)){ store.mistakes.push(rec.kanji); saveStore(); }
-      const expCount = {};
-      own.forEach(p => expCount[p.key] = (expCount[p.key] || 0) + 1);
-      document.querySelectorAll(".slot").forEach((s, i) => {
-        const p = placed[i];
-        if(p && expCount[p.key]) expCount[p.key]--;
-        else if(p) s.classList.add("badslot");
+      document.querySelectorAll(".slot2").forEach((s, i) => {
+        if(placed[i] && placed[i].key !== own[i].key) s.classList.add("badslot");
       });
       document.getElementById("judgeArea").insertAdjacentHTML("beforeend", `<div class="result-bad">ちがう パーツが あるよ。赤い わくを 見直してね。</div>`);
       setTimeout(() => { const rb = document.querySelector(".result-bad"); if(rb) rb.remove(); }, 2600);
