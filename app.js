@@ -69,7 +69,7 @@ function svgKanji(rec, opts){
   const groups = rec.components.map((c, i) => {
     let stroke = "#26304d", cls = "comp", extra = "";
     if(opts.colored) stroke = COMP_COLORS[i % COMP_COLORS.length];
-    if(opts.radical && c.rad) stroke = "#e2574c";
+    if(opts.radical && (c.rad || opts.radicalAll)) stroke = "#e2574c";
     else if(opts.radical) stroke = "#b9c2dd";
     if(opts.selected !== undefined){ cls += (i === opts.selected ? " sel" : " dim"); }
     const hit = c.d.map(d => `<path class="hit" d="${d}" stroke="rgba(0,0,0,0)" stroke-width="19" style="pointer-events:stroke"/>`).join("");
@@ -154,17 +154,18 @@ function readingsHTML(rec){
   return `<div class="reading-chips">${on}${kun}<span class="rchip">${rec.strokes} かく</span></div>`;
 }
 function exampleOf(rec){ return (rec.examples || []).find(e => e.l === 1) || (rec.examples || [])[0]; }
+function labelOf(c){ return c.label || c.el; }
 function chantOf(rec){
   const t = TEXT[rec.kanji];
   if(t && t.chant) return t.chant;
-  return rec.components.map(c => c.el).join(" ＋ ");
+  return rec.components.map(c => labelOf(c)).join(" ＋ ");
 }
 function explOf(rec){
   const t = TEXT[rec.kanji];
   return (t && t.expl) ? t.expl : "";
 }
 function formulaOf(rec){
-  return rec.components.map(c => c.el).join(" ＋ ") + " ＝ " + rec.kanji;
+  return rec.components.map(c => labelOf(c)).join(" ＋ ") + " ＝ " + rec.kanji;
 }
 
 /* ---------- トップ ---------- */
@@ -269,11 +270,16 @@ function playBunkai(rec){
       const c = rec.components[sel];
       const pos = c.pos ? `場所：${POS_JA[c.pos]}` : "場所：全体";
       const rad = c.rad ? `<br>⭐ これは 部首の パーツ（${esc(rec.radicalName)}）` : "";
-      info = `<div class="info-box"><div class="ib-title">パーツ ${sel + 1}</div><div class="ib-main">「${esc(c.el)}」</div><div class="ib-sub">${pos}${rad}</div></div>`;
+      info = `<div class="info-box"><div class="ib-title">パーツ ${sel + 1}</div><div class="ib-main">「${esc(labelOf(c))}」</div><div class="ib-sub">${pos}${rad}</div></div>`;
     }
     const ex = exampleOf(rec);
+    const radComp = rec.components.find(c => c.rad);
+    const radLine = rec.radicalState === "whole" ? `部首は「${esc(rec.radicalName)}」。この字 そのものが 部首だよ。`
+      : rec.radicalState === "name" ? `部首は「${esc(rec.radicalName)}」。辞書の 分類の 名前で、パーツには 分かれないよ。`
+      : `部首は「${esc(rec.radicalName)}」${radComp ? `（パーツの「${esc(labelOf(radComp))}」）` : ""}。`;
     return `${readingsHTML(rec)}
       <div class="formula">${esc(formulaOf(rec))}</div>
+      <div class="ib-sub">${radLine}</div>
       ${info}
       <div class="info-box"><div class="ib-title">となえかた（唱え方）</div><div class="chant">${esc(chantOf(rec))}</div>
       ${explOf(rec) ? `<div class="ib-sub">${esc(explOf(rec))}</div>` : ""}</div>
@@ -318,12 +324,13 @@ function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor
 function playKumitate(rec){
   const stage = document.getElementById("playStage");
   const panel = document.getElementById("playPanel");
-  const own = rec.components.map((c, i) => ({key: c.el + "|" + c.pos, el: c.el, pos: c.pos, d: c.d, own:true, id:"own" + i}));
+  const own = rec.components.map((c, i) => ({key: labelOf(c) + "|" + c.pos, el: c.el, label: labelOf(c), pos: c.pos, d: c.d, own:true, id:"own" + i}));
   const ownEls = new Set(rec.components.map(c => c.el));
+  const ownLabels = new Set(rec.components.map(c => labelOf(c)));
   const pool = [];
-  DATA.forEach(r => { if(r.kanji !== rec.kanji) r.components.forEach(c => { if(!ownEls.has(c.el)) pool.push(c); }); });
-  const distract = shuffle(pool.slice()).filter((c, i, a) => a.findIndex(x => x.el === c.el) === i)
-    .slice(0, Math.max(2, 6 - own.length)).map((c, i) => ({key:"__d" + i, el: c.el, pos: c.pos, d: c.d, own:false, id:"dis" + i}));
+  DATA.forEach(r => { if(r.kanji !== rec.kanji) r.components.forEach(c => { if(!ownEls.has(c.el) && !ownLabels.has(labelOf(c))) pool.push(c); }); });
+  const distract = shuffle(pool.slice()).filter((c, i, a) => a.findIndex(x => labelOf(x) === labelOf(c)) === i)
+    .slice(0, Math.max(2, 6 - own.length)).map((c, i) => ({key:"__d" + i, el: c.el, label: labelOf(c), pos: c.pos, d: c.d, own:false, id:"dis" + i}));
   const palette = shuffle(own.concat(distract));
   const placed = new Array(own.length).fill(null);
   let selected = null;
@@ -361,7 +368,7 @@ function playKumitate(rec){
     const pa = document.getElementById("palette");
     pa.innerHTML = palette.map(p => {
       const used = placed.includes(p);
-      return `<button class="partbtn ${used ? "used" : ""} ${selected === p ? "selected" : ""}" data-id="${p.id}">${svgPart(p)}<span class="plabel">${esc(p.el)}</span></button>`;
+      return `<button class="partbtn ${used ? "used" : ""} ${selected === p ? "selected" : ""}" data-id="${p.id}">${svgPart(p)}<span class="plabel">${esc(p.label || p.el)}</span></button>`;
     }).join("");
     pa.querySelectorAll(".partbtn").forEach(b => b.addEventListener("click", () => {
       selected = palette.find(p => p.id === b.dataset.id) || null;
@@ -436,8 +443,10 @@ function playBushu(rec){
       b.classList.add("correct"); sndGood();
       panel.querySelectorAll(".optbtn").forEach(x => x.disabled = true);
       setSt(rec.kanji, "r");
-      const hasRadComp = rec.components.some(c => c.rad);
-      stage.innerHTML = svgKanji(rec, {radical:true}) + `<div class="ib-sub">${hasRadComp ? "赤い パーツが 部首だよ" : ""}</div>`;
+      const stateNote = rec.radicalState === "whole" ? "この字は、字 そのものが 部首だよ"
+        : rec.radicalState === "name" ? "この字の 部首は、辞書の 分類の 名前。パーツには 分かれないよ"
+        : "赤い パーツが 部首だよ";
+      stage.innerHTML = svgKanji(rec, {radical:true, radicalAll: rec.radicalState === "whole"}) + `<div class="ib-sub">${stateNote}</div>`;
       const same = DATA.filter(r => r.radicalNo === rec.radicalNo && r.kanji !== rec.kanji).map(r => r.kanji);
       document.getElementById("bushuResult").innerHTML = finishPanel(
         `<div class="result-good">せいかい！ 部首は「${esc(rec.radicalName)}」</div>
@@ -457,8 +466,9 @@ function renderParts(){
   DATA.forEach(r => {
     if(r.components.length < 2) return;
     r.components.forEach(c => {
-      if(!map.has(c.el)) map.set(c.el, {comp:c, kanjis:[]});
-      if(!map.get(c.el).kanjis.includes(r.kanji)) map.get(c.el).kanjis.push(r.kanji);
+      const nm = labelOf(c);
+      if(!map.has(nm)) map.set(nm, {comp:c, kanjis:[]});
+      if(!map.get(nm).kanjis.includes(r.kanji)) map.get(nm).kanjis.push(r.kanji);
     });
   });
   const list = [...map.entries()].sort((a, b) => b[1].kanjis.length - a[1].kanjis.length);

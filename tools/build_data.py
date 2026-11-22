@@ -171,18 +171,13 @@ def ov_whole(comps, kanji):
     return [C(kanji, "", d, rad)]
 
 OVERRIDES = {
-    "左": ov_split_paths(0, [("一", "top", 1), ("丿", "top", 1)]),  # then 工 stays; fix pos below
     "先": ov_relabel(0, "龶", "top"),
     "白": ov_relabel(0, "丿", "top"),
     "赤": ov_relabel(1, "灬", "bottom"),
     "本": ov_relabel(1, "一", "bottom"),
-    "虫": ov_split_paths(1, [("丨", "", 1), ("丶", "", 1)]),
-    "立": ov_whole, "円": ov_whole, "五": ov_whole, "年": ov_whole, "三": ov_whole,
-    "金": ov_whole, "竹": ov_whole, "二": ov_whole, "八": ov_whole,
+    "虫": ov_whole, "七": ov_whole, "九": ov_whole,
+    "五": ov_whole, "年": ov_whole, "八": ov_whole,
 }
-# 左: after split, the 工 comp needs pos bottom
-def fix_left(comps):
-    return [dict(c, pos="bottom") if c["el"] == "工" else c for c in comps]
 
 def split_lin(comps):
     # 森: replace 林 comp with its 木 subgroups (re-walk the group)
@@ -195,6 +190,46 @@ def split_lin(comps):
                                  group_paths(sub), group_rad(sub)))
             continue
         out.append(c)
+    return out
+
+# 画単位の分割: (内部名, 表示名, 位置, 画インデックス群)。全画を document 順に並べ替えてから適用する。
+STROKE_SPLITS = {
+    "二": [("一","一","top",[0]), ("一","一","bottom",[1])],
+    "三": [("一","一","top",[0]), ("一","一","",[1]), ("一","一","bottom",[2])],
+    "十": [("一","一","top",[0]), ("丨","丨","",[1])],
+    "大": [("一","一","top",[0]), ("人","人","",[1,2])],
+    "日": [("囗","囗","kamae",[0,1,3]), ("一","一","",[2])],
+    "火": [("丶","丶","",[0]), ("丶","丶","",[1]), ("人","人","",[2,3])],
+    "木": [("十","十","top",[0,1]), ("八","ハ","bottom",[2,3])],
+    "金": [("人","人","top",[0,1]), ("一","一","",[2]), ("土","土","",[3,4,7]), ("丷","丷","bottom",[5,6])],
+    "土": [("十","十","top",[0,1]), ("一","一","bottom",[2])],
+    "田": [("囗","囗","kamae",[0,1,4]), ("十","十","",[2,3])],
+    "目": [("囗","囗","kamae",[0,1,4]), ("二","二","",[2,3])],
+    "車": [("日","日","",[0,1,2,3,5]), ("十","十","",[4,6])],
+    "竹": [("竹","ケ","left",[0,1,2]), ("竹","ケ","right",[3,4,5])],
+    "左": [("ナ","ナ","top",[0,1]), ("工","工","bottom",[2,3,4])],
+    "王": [("三","三","",[0,2,3]), ("丨","丨","",[1])],
+    "先": [("丿","ノ","top",[0]), ("土","土","",[1,2,3]), ("儿","ル","bottom",[4,5])],
+    "立": [("丶","丶","top",[0]), ("一","一","",[1]), ("八","ハ","",[2,3]), ("一","一","bottom",[4])],
+    "青": [("土","土","top",[0,1,2]), ("一","一","",[3]), ("月","月","bottom",[4,5,6,7])],
+    "円": [("冂","冂","kamae",[0,1]), ("一","一","",[2]), ("一","一","",[3])],
+    "生": [("丿","ノ","top",[0]), ("土","土","bottom",[1,2,3,4])],
+    "石": [("厂","厂","top",[0,1]), ("口","口","bottom",[2,3,4])],
+}
+STRUCT_OVERRIDES = {"十": "parts", "大": "parts", "火": "parts", "車": "parts", "王": "parts"}
+# 表示名（子ども向け）の上書き: 内部名の並びと対応する表示名リスト
+LABELS = {
+    "休": ["イ","木"], "学": ["ツ","冖","子"], "四": ["囗","ル"], "文": ["亠","メ"],
+    "気": ["气","メ"], "六": ["亠","ハ"], "上": ["ト","一"], "下": ["一","ト"],
+    "貝": ["目","ハ"], "見": ["目","ル"], "千": ["ノ","十"], "白": ["ノ","日"],
+    "足": ["口","止"], "右": ["ナ","口"],
+}
+def apply_stroke_split(comps, kanji):
+    strokes = [d for c in comps for d in c["d"]]
+    out = []
+    for el, label, pos, idxs in STROKE_SPLITS[kanji]:
+        out.append({"el": el, "label": label, "pos": pos, "rad": False,
+                    "d": [strokes[i] for i in idxs]})
     return out
 
 RADICAL_NAMES = {1:"いち",2:"ぼう",5:"おつ",7:"に",9:"ひと",10:"にんにょう",11:"いる",12:"はち",
@@ -231,15 +266,19 @@ for ch in order:
     tree = ET.parse(fetch_svg(ch))
     sp = next(g for g in tree.getroot().iter(SVG + "g") if (g.get("id") or "").startswith("kvg:StrokePaths"))
     comps = merge_parts(raw_components(list(sp)[0], ch), ch)
+    if ch in STROKE_SPLITS:
+        comps = apply_stroke_split(comps, ch)
     if ch == "森":
         comps = split_lin(comps)
     if ch in OVERRIDES:
         comps = OVERRIDES[ch](comps, ch)
-    if ch == "左":
-        comps = fix_left(comps)
     for c in comps:
         c.pop("_grp", None); c.pop("part", None); c.pop("_bare", None)
         c.pop("_noel_grp", None); c.pop("_noel_pos", None)
+        c.setdefault("label", c["el"])
+    if ch in LABELS:
+        for c, lab in zip(comps, LABELS[ch]):
+            c["label"] = lab
     if any(c["el"] is None for c in comps):
         problems.append((ch, "None element remains"))
     rno = info[ch]["radicalNo"]
@@ -247,6 +286,12 @@ for ch in order:
     rad_comp = next((c for c in comps if c["el"] in targets), None)
     for c in comps:
         c["rad"] = (c is rad_comp)
+    if RADICAL_ELEMENT.get(rno) == ch or ch in {"王"}:
+        radical_state = "whole"   # 字そのもの（または玉の形違いの王）が部首
+    elif rad_comp is not None:
+        radical_state = "part"    # 部首が構成部品として見える
+    else:
+        radical_state = "name"    # 辞書上の分類のみ（独立表示できない）
     rname = RADICAL_NAMES.get(rno, "")
     if rad_comp and rad_comp["el"] in VARIANT_NAMES:
         rname = VARIANT_NAMES[rad_comp["el"]]
@@ -258,9 +303,9 @@ for ch in order:
         ptype = POS_TYPE.get(rad_comp["pos"], "そのほか")
     records.append({"kanji": ch, "grade": 1, "on": readings[ch]["on"], "kun": readings[ch]["kun"],
         "strokes": info[ch]["strokes"], "radicalNo": rno, "radicalName": rname,
-        "radicalPosType": ptype,
-        "structure": derive_structure(comps),
-        "components": [{"el": c["el"], "pos": c["pos"], "rad": bool(c["rad"]), "d": c["d"]} for c in comps],
+        "radicalPosType": ptype, "radicalState": radical_state,
+        "structure": STRUCT_OVERRIDES.get(ch, derive_structure(comps)),
+        "components": [{"el": c["el"], "label": c.get("label", c["el"]), "pos": c["pos"], "rad": bool(c["rad"]), "d": c["d"]} for c in comps],
         "examples": examples.get(ch, [])})
 
 print("structures:", Counter(r["structure"] for r in records))

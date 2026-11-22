@@ -13,10 +13,12 @@
   "radicalNo": 1,
   "radicalName": "いち",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "一",
+    "label": "一",
     "pos": "",
     "rad": true,
     "d": [
@@ -56,10 +58,12 @@
   "radicalNo": 30,
   "radicalName": "くち",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "丆",
+    "label": "ナ",
     "pos": "",
     "rad": false,
     "d": [
@@ -69,6 +73,7 @@
    },
    {
     "el": "口",
+    "label": "口",
     "pos": "",
     "rad": true,
     "d": [
@@ -110,10 +115,12 @@
   "radicalNo": 173,
   "radicalName": "あめ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "雨",
+    "label": "雨",
     "pos": "",
     "rad": true,
     "d": [
@@ -158,17 +165,35 @@
   "strokes": 4,
   "radicalNo": 13,
   "radicalName": "まきがまえ",
-  "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalPosType": "かまえ",
+  "radicalState": "part",
+  "structure": "enclose",
   "components": [
    {
-    "el": "円",
+    "el": "冂",
+    "label": "冂",
+    "pos": "kamae",
+    "rad": true,
+    "d": [
+     "M21.75,19.8c0.91,0.91,1.47,3.23,1.5,5.45c0.2,13.9,0.03,47.69,0.03,62.5c0,2-0.03,4.99-0.03,6",
+     "M24.06,21.56c15.07-1.68,49.46-5.58,57.92-6.31c2.9-0.25,4.78,1.88,4.78,4.27c0,13.48,0,53.21,0,67.48c0,9.75-4.25,6.5-8.5,1.5"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
     "pos": "",
     "rad": false,
     "d": [
-     "M21.75,19.8c0.91,0.91,1.47,3.23,1.5,5.45c0.2,13.9,0.03,47.69,0.03,62.5c0,2-0.03,4.99-0.03,6",
-     "M24.06,21.56c15.07-1.68,49.46-5.58,57.92-6.31c2.9-0.25,4.78,1.88,4.78,4.27c0,13.48,0,53.21,0,67.48c0,9.75-4.25,6.5-8.5,1.5",
-     "M52.25,20.75c0.88,0.88,1.5,2,1.5,3.71c0,6.76,0,27.54,0,31.04",
+     "M52.25,20.75c0.88,0.88,1.5,2,1.5,3.71c0,6.76,0,27.54,0,31.04"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M24.75,59.75c14.62-1.75,43-4.25,60.5-5.25"
     ]
    }
@@ -202,17 +227,27 @@
   "radicalNo": 96,
   "radicalName": "たま",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "parts",
   "components": [
    {
-    "el": "王",
+    "el": "三",
+    "label": "三",
     "pos": "",
-    "rad": true,
+    "rad": false,
     "d": [
      "M29.5,21.22c2.7,0.62,5.55,0.08,8.24-0.28c10.59-1.42,22.63-2.81,33.26-3.79c3.01-0.27,6.3-0.55,9.25,0.35",
-     "M52.4,22c1.92,2.4,1.92,3.83,1.92,5.75c0,12.13-0.02,57.7-0.02,59.75",
      "M29.25,55c2.62,0.49,5.24,0.3,7.87,0.08c10.32-0.87,22.57-2.65,34.75-3.65c2.95-0.24,5.81-0.27,8.76,0.07",
      "M13.75,90.99c4.12,0.7,8.14,0.15,12.25-0.29c17.42-1.86,39.2-3.8,59.5-4.61c3.47-0.14,6.86-0.25,10.25,0.65"
+    ]
+   },
+   {
+    "el": "丨",
+    "label": "丨",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M52.4,22c1.92,2.4,1.92,3.83,1.92,5.75c0,12.13-0.02,57.7-0.02,59.75"
     ]
    }
   ],
@@ -249,10 +284,12 @@
   "radicalNo": 180,
   "radicalName": "おと",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "立",
+    "label": "立",
     "pos": "top",
     "rad": false,
     "d": [
@@ -265,6 +302,7 @@
    },
    {
     "el": "日",
+    "label": "日",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -313,10 +351,12 @@
   "radicalNo": 1,
   "radicalName": "いち",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "一",
+    "label": "一",
     "pos": "",
     "rad": true,
     "d": [
@@ -325,6 +365,7 @@
    },
    {
     "el": "卜",
+    "label": "ト",
     "pos": "",
     "rad": false,
     "d": [
@@ -364,15 +405,33 @@
   "radicalNo": 86,
   "radicalName": "ひ",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "parts",
   "components": [
    {
-    "el": "火",
+    "el": "丶",
+    "label": "丶",
     "pos": "",
-    "rad": true,
+    "rad": false,
     "d": [
-     "M24.25,34c3.27,3.33,8.5,13,9.5,17.75",
-     "M83,27.25c0.5,1.38,0.22,2.74-0.5,4.25c-2.38,5-7.5,12.12-12.75,17.25",
+     "M24.25,34c3.27,3.33,8.5,13,9.5,17.75"
+    ]
+   },
+   {
+    "el": "丶",
+    "label": "丶",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M83,27.25c0.5,1.38,0.22,2.74-0.5,4.25c-2.38,5-7.5,12.12-12.75,17.25"
+    ]
+   },
+   {
+    "el": "人",
+    "label": "人",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M52.5,14.25c1,1.25,1.5,3.12,1.5,5C54,69,39.62,80,21,91.5",
      "M52.75,50c12.49,14.06,25.01,28.42,33.62,36.13c2.7,2.42,4.9,4.02,8.38,4.87"
     ]
@@ -409,10 +468,12 @@
   "radicalNo": 140,
   "radicalName": "くさかんむり",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "艹",
+    "label": "艹",
     "pos": "top",
     "rad": true,
     "d": [
@@ -423,6 +484,7 @@
    },
    {
     "el": "化",
+    "label": "化",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -462,10 +524,12 @@
   "radicalNo": 154,
   "radicalName": "かい",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "目",
+    "label": "目",
     "pos": "top",
     "rad": false,
     "d": [
@@ -478,6 +542,7 @@
    },
    {
     "el": "八",
+    "label": "ハ",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -517,10 +582,12 @@
   "radicalNo": 39,
   "radicalName": "こ",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "⺍",
+    "label": "ツ",
     "pos": "",
     "rad": false,
     "d": [
@@ -531,6 +598,7 @@
    },
    {
     "el": "冖",
+    "label": "冖",
     "pos": "",
     "rad": false,
     "d": [
@@ -540,6 +608,7 @@
    },
    {
     "el": "子",
+    "label": "子",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -579,10 +648,12 @@
   "radicalNo": 84,
   "radicalName": "きがまえ",
   "radicalPosType": "かまえ",
+  "radicalState": "part",
   "structure": "enclose",
   "components": [
    {
     "el": "气",
+    "label": "气",
     "pos": "kamae",
     "rad": true,
     "d": [
@@ -594,6 +665,7 @@
    },
    {
     "el": "乂",
+    "label": "メ",
     "pos": "",
     "rad": false,
     "d": [
@@ -634,21 +706,16 @@
   "radicalNo": 5,
   "radicalName": "おつ",
   "radicalPosType": "そのほか",
-  "structure": "parts",
+  "radicalState": "name",
+  "structure": "single",
   "components": [
    {
-    "el": "丿",
+    "el": "九",
+    "label": "九",
     "pos": "",
     "rad": false,
     "d": [
-     "M41.88,14.38c1,1.38,1.5,3.25,1.5,5.12c0,40.13-9.12,57.5-28.5,68.75"
-    ]
-   },
-   {
-    "el": "乙",
-    "pos": "",
-    "rad": true,
-    "d": [
+     "M41.88,14.38c1,1.38,1.5,3.25,1.5,5.12c0,40.13-9.12,57.5-28.5,68.75",
      "M13.5,45.75c2.88,0.85,5.78,0.05,8.58-0.66c8.47-2.14,39.88-9.79,40.92-9.84c2.5-0.12,4.75,0.5,4.25,4.75c-0.5,4.25-5.5,20.75-7,32.5c-2.23,17.46,2,19.37,18.21,19.37c13.79,0,19.01-1.07,19.27-10.12"
     ]
    }
@@ -684,10 +751,12 @@
   "radicalNo": 9,
   "radicalName": "にんべん",
   "radicalPosType": "へん",
+  "radicalState": "part",
   "structure": "horizontal",
   "components": [
    {
     "el": "亻",
+    "label": "イ",
     "pos": "left",
     "rad": true,
     "d": [
@@ -697,6 +766,7 @@
    },
    {
     "el": "木",
+    "label": "木",
     "pos": "right",
     "rad": false,
     "d": [
@@ -738,10 +808,12 @@
   "radicalNo": 96,
   "radicalName": "たま",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "parts",
   "components": [
    {
     "el": "王",
+    "label": "王",
     "pos": "",
     "rad": true,
     "d": [
@@ -753,6 +825,7 @@
    },
    {
     "el": "丶",
+    "label": "丶",
     "pos": "",
     "rad": false,
     "d": [
@@ -793,21 +866,47 @@
   "radicalNo": 167,
   "radicalName": "かね",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "金",
-    "pos": "",
-    "rad": true,
+    "el": "人",
+    "label": "人",
+    "pos": "top",
+    "rad": false,
     "d": [
      "M51.75,11.88c0.25,1.52-0.22,3.57-0.8,4.84C47.73,23.79,33.13,47.1,14.5,58",
-     "M52.25,18.25c9.5,7.5,34.14,30.88,37.21,32.67c3.12,1.82,4.14,2.66,5.54,2.83",
-     "M34.02,47.08c1.69,0.65,3.85,0.36,5.6,0.21c6.91-0.6,14.33-1.69,23.99-2.64c2.07-0.2,4.1-0.4,6.15,0.12",
+     "M52.25,18.25c9.5,7.5,34.14,30.88,37.21,32.67c3.12,1.82,4.14,2.66,5.54,2.83"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M34.02,47.08c1.69,0.65,3.85,0.36,5.6,0.21c6.91-0.6,14.33-1.69,23.99-2.64c2.07-0.2,4.1-0.4,6.15,0.12"
+    ]
+   },
+   {
+    "el": "土",
+    "label": "土",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M30.18,64.96c1.95,0.67,4.47,0.31,6.47,0.12c9.24-0.87,17.42-1.58,31.35-2.53c2.3-0.16,4.68-0.36,6.96,0.08",
      "M51.47,48.82c0.89,0.85,0.89,3.76,0.89,4.43c0,3.64,0.27,38.71,0.22,39.82",
-     "M31,74.75c3.25,3,7.48,9.27,8.5,12",
-     "M73.01,72.11c0.24,1.14,0.11,2.46-0.54,3.51C70.38,79,66.44,83.22,63,86",
      "M18.5,94.86c2.88,1.01,6.41,0.4,9.37,0.15c16.55-1.42,32.95-2.12,51.51-3c3.13-0.15,6.32-0.27,9.38,0.59"
+    ]
+   },
+   {
+    "el": "丷",
+    "label": "丷",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
+     "M31,74.75c3.25,3,7.48,9.27,8.5,12",
+     "M73.01,72.11c0.24,1.14,0.11,2.46-0.54,3.51C70.38,79,66.44,83.22,63,86"
     ]
    }
   ],
@@ -844,10 +943,12 @@
   "radicalNo": 116,
   "radicalName": "あな",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "穴",
+    "label": "穴",
     "pos": "top",
     "rad": true,
     "d": [
@@ -860,6 +961,7 @@
    },
    {
     "el": "工",
+    "label": "工",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -901,10 +1003,12 @@
   "radicalNo": 74,
   "radicalName": "つき",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "月",
+    "label": "月",
     "pos": "",
     "rad": true,
     "d": [
@@ -946,10 +1050,12 @@
   "radicalNo": 94,
   "radicalName": "いぬ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "parts",
   "components": [
    {
     "el": "大",
+    "label": "大",
     "pos": "",
     "rad": false,
     "d": [
@@ -960,6 +1066,7 @@
    },
    {
     "el": "丶",
+    "label": "丶",
     "pos": "",
     "rad": false,
     "d": [
@@ -999,10 +1106,12 @@
   "radicalNo": 147,
   "radicalName": "みる",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "目",
+    "label": "目",
     "pos": "top",
     "rad": false,
     "d": [
@@ -1015,6 +1124,7 @@
    },
    {
     "el": "儿",
+    "label": "ル",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -1054,10 +1164,12 @@
   "radicalNo": 7,
   "radicalName": "に",
   "radicalPosType": "そのほか",
+  "radicalState": "name",
   "structure": "single",
   "components": [
    {
     "el": "五",
+    "label": "五",
     "pos": "",
     "rad": false,
     "d": [
@@ -1100,10 +1212,12 @@
   "radicalNo": 30,
   "radicalName": "くち",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "口",
+    "label": "口",
     "pos": "",
     "rad": true,
     "d": [
@@ -1142,10 +1256,12 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "へん",
+  "radicalState": "part",
   "structure": "horizontal",
   "components": [
    {
     "el": "木",
+    "label": "木",
     "pos": "left",
     "rad": true,
     "d": [
@@ -1157,6 +1273,7 @@
    },
    {
     "el": "交",
+    "label": "交",
     "pos": "right",
     "rad": false,
     "d": [
@@ -1200,26 +1317,22 @@
   "radicalNo": 48,
   "radicalName": "こう",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
-    "el": "一",
+    "el": "ナ",
+    "label": "ナ",
     "pos": "top",
     "rad": false,
     "d": [
-     "M20.75,40.17c2.95,0.49,5.68,0.29,8.64-0.05c14.5-1.68,29.75-4.47,47.22-5.96c2.83-0.24,5.87-0.58,8.64,0.26"
-    ]
-   },
-   {
-    "el": "丿",
-    "pos": "top",
-    "rad": false,
-    "d": [
+     "M20.75,40.17c2.95,0.49,5.68,0.29,8.64-0.05c14.5-1.68,29.75-4.47,47.22-5.96c2.83-0.24,5.87-0.58,8.64,0.26",
      "M55.48,12.5c0.27,1.57,0.21,4.18-0.29,5.93C46.59,48.64,32.07,74.14,11.25,91"
     ]
    },
    {
     "el": "工",
+    "label": "工",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -1259,16 +1372,34 @@
   "strokes": 3,
   "radicalNo": 1,
   "radicalName": "いち",
-  "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalPosType": "かんむり",
+  "radicalState": "part",
+  "structure": "vertical",
   "components": [
    {
-    "el": "三",
+    "el": "一",
+    "label": "一",
+    "pos": "top",
+    "rad": true,
+    "d": [
+     "M27.5,23.65c3.09,0.73,6.29,0.36,9.4,0.06c10.2-1,27-2.94,38.97-3.57c3.06-0.16,6.09-0.2,9.14,0.23"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
     "pos": "",
     "rad": false,
     "d": [
-     "M27.5,23.65c3.09,0.73,6.29,0.36,9.4,0.06c10.2-1,27-2.94,38.97-3.57c3.06-0.16,6.09-0.2,9.14,0.23",
-     "M28.75,55.14c3.13,0.76,6.46,0.43,9.64,0.2c10.03-0.72,23.97-2.63,34.73-3.12c2.7-0.12,5.45-0.16,8.13,0.3",
+     "M28.75,55.14c3.13,0.76,6.46,0.43,9.64,0.2c10.03-0.72,23.97-2.63,34.73-3.12c2.7-0.12,5.45-0.16,8.13,0.3"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M13,87.83c3.94,1.01,7.72,0.96,11.75,0.72c18.41-1.07,41.27-3.39,61.12-4.07c3.63-0.13,7.2-0.1,10.75,0.78"
     ]
    }
@@ -1304,10 +1435,12 @@
   "radicalNo": 46,
   "radicalName": "やま",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "山",
+    "label": "山",
     "pos": "",
     "rad": true,
     "d": [
@@ -1349,10 +1482,12 @@
   "radicalNo": 39,
   "radicalName": "こ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "子",
+    "label": "子",
     "pos": "",
     "rad": true,
     "d": [
@@ -1395,10 +1530,12 @@
   "radicalNo": 31,
   "radicalName": "くにがまえ",
   "radicalPosType": "かまえ",
+  "radicalState": "part",
   "structure": "enclose",
   "components": [
    {
     "el": "囗",
+    "label": "囗",
     "pos": "kamae",
     "rad": true,
     "d": [
@@ -1409,6 +1546,7 @@
    },
    {
     "el": "儿",
+    "label": "ル",
     "pos": "",
     "rad": false,
     "d": [
@@ -1448,10 +1586,12 @@
   "radicalNo": 120,
   "radicalName": "いと",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "糸",
+    "label": "糸",
     "pos": "",
     "rad": true,
     "d": [
@@ -1495,10 +1635,12 @@
   "radicalNo": 39,
   "radicalName": "こ",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "宀",
+    "label": "宀",
     "pos": "top",
     "rad": false,
     "d": [
@@ -1509,6 +1651,7 @@
    },
    {
     "el": "子",
+    "label": "子",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -1549,10 +1692,12 @@
   "radicalNo": 128,
   "radicalName": "みみ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "耳",
+    "label": "耳",
     "pos": "",
     "rad": true,
     "d": [
@@ -1597,21 +1742,16 @@
   "radicalNo": 1,
   "radicalName": "いち",
   "radicalPosType": "そのほか",
-  "structure": "parts",
+  "radicalState": "name",
+  "structure": "single",
   "components": [
    {
-    "el": "一",
-    "pos": "",
-    "rad": true,
-    "d": [
-     "M15.5,51.75c1.82,0.5,4.38,0.88,6.96,0.5c16.91-2.45,50.92-8.12,64.44-8.74c3.02-0.14,4.84,0.24,6.35,0.49"
-    ]
-   },
-   {
-    "el": "乙",
+    "el": "七",
+    "label": "七",
     "pos": "",
     "rad": false,
     "d": [
+     "M15.5,51.75c1.82,0.5,4.38,0.88,6.96,0.5c16.91-2.45,50.92-8.12,64.44-8.74c3.02-0.14,4.84,0.24,6.35,0.49",
      "M43,20c1.38,1.38,2.15,3.25,2.15,5.26C45.15,29.5,45,71.84,45,76c0,10.5,2.25,12.25,20.25,12.25c18.75,0,20-3.75,20-2.75"
     ]
    }
@@ -1647,19 +1787,29 @@
   "radicalNo": 159,
   "radicalName": "くるま",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "parts",
   "components": [
    {
-    "el": "車",
+    "el": "日",
+    "label": "日",
     "pos": "",
-    "rad": true,
+    "rad": false,
     "d": [
      "M26,26c2.85,0.69,6.1,0.14,8.98-0.1c11.09-0.93,25.8-2.64,38.89-3.51c2.68-0.18,5.22-0.16,7.88,0.23",
      "M27.5,37.92c0.81,0.5,1.83,2.39,1.98,3.05c0.85,3.73,1.83,11.31,2.95,18.54c0.32,2.09,0.41,3.2,0.75,5.24",
      "M30.36,39.49c14.52-1.61,36.14-4.11,47.63-4.5c3.46-0.12,4.17,1.57,4.03,3.08c-0.42,4.32-2.01,13.81-3.5,20.19c-0.21,0.89-0.51,1.87-0.76,3",
      "M32.5,51.25c13.75-1.5,34.25-3.75,47-4.25",
+     "M16,77.86c3.62,0.89,7.38,0.77,10.63,0.39c18.51-2.14,39.85-4.55,57.12-5.45c3.05-0.16,6.5-0.05,9.5,0.63"
+    ]
+   },
+   {
+    "el": "十",
+    "label": "十",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M34.25,63.25C46,61.62,65,59.75,77,59.25",
-     "M16,77.86c3.62,0.89,7.38,0.77,10.63,0.39c18.51-2.14,39.85-4.55,57.12-5.45c3.05-0.16,6.5-0.05,9.5,0.63",
      "M52.5,11.51c1.36,1.36,2.06,2.78,2.14,6.02c0.03,1.07-0.07,48.79-0.19,70.7c-0.02,4.27-0.05,7.36-0.07,8.65"
     ]
    }
@@ -1696,10 +1846,12 @@
   "radicalNo": 64,
   "radicalName": "て",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "手",
+    "label": "手",
     "pos": "",
     "rad": true,
     "d": [
@@ -1743,14 +1895,24 @@
   "radicalNo": 24,
   "radicalName": "じゅう",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "parts",
   "components": [
    {
-    "el": "十",
-    "pos": "",
-    "rad": true,
+    "el": "一",
+    "label": "一",
+    "pos": "top",
+    "rad": false,
     "d": [
-     "M11.88,50.98c3.18,0.89,6.62,0.61,9.87,0.35c19.92-1.58,45.23-4.76,63.38-5.82c3.85-0.23,7.23-0.07,11,0.56",
+     "M11.88,50.98c3.18,0.89,6.62,0.61,9.87,0.35c19.92-1.58,45.23-4.76,63.38-5.82c3.85-0.23,7.23-0.07,11,0.56"
+    ]
+   },
+   {
+    "el": "丨",
+    "label": "丨",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M52.22,11.63c1.4,1.4,2.2,3.96,2.2,6.26c0,1.13-0.03,51.22-0.19,73.41c-0.03,3.96-0.06,6.83-0.08,8.08"
     ]
    }
@@ -1788,10 +1950,12 @@
   "radicalNo": 17,
   "radicalName": "うけばこ",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "山",
+    "label": "山",
     "pos": "",
     "rad": false,
     "d": [
@@ -1802,6 +1966,7 @@
    },
    {
     "el": "凵",
+    "label": "凵",
     "pos": "",
     "rad": true,
     "d": [
@@ -1843,10 +2008,12 @@
   "radicalNo": 38,
   "radicalName": "おんな",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "女",
+    "label": "女",
     "pos": "",
     "rad": true,
     "d": [
@@ -1889,10 +2056,12 @@
   "radicalNo": 42,
   "radicalName": "しょう",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "小",
+    "label": "小",
     "pos": "",
     "rad": true,
     "d": [
@@ -1937,10 +2106,12 @@
   "radicalNo": 1,
   "radicalName": "いち",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "卜",
+    "label": "ト",
     "pos": "",
     "rad": false,
     "d": [
@@ -1950,6 +2121,7 @@
    },
    {
     "el": "一",
+    "label": "一",
     "pos": "",
     "rad": true,
     "d": [
@@ -1988,10 +2160,12 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "木",
+    "label": "木",
     "pos": "top",
     "rad": true,
     "d": [
@@ -2003,6 +2177,7 @@
    },
    {
     "el": "木",
+    "label": "木",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2014,6 +2189,7 @@
    },
    {
     "el": "木",
+    "label": "木",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2056,10 +2232,12 @@
   "radicalNo": 9,
   "radicalName": "ひと",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "人",
+    "label": "人",
     "pos": "",
     "rad": true,
     "d": [
@@ -2099,10 +2277,12 @@
   "radicalNo": 85,
   "radicalName": "みず",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "水",
+    "label": "水",
     "pos": "",
     "rad": true,
     "d": [
@@ -2146,10 +2326,12 @@
   "radicalNo": 77,
   "radicalName": "とめる",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "一",
+    "label": "一",
     "pos": "",
     "rad": false,
     "d": [
@@ -2158,6 +2340,7 @@
    },
    {
     "el": "止",
+    "label": "止",
     "pos": "",
     "rad": true,
     "d": [
@@ -2205,14 +2388,24 @@
   "radicalNo": 100,
   "radicalName": "せい",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "生",
-    "pos": "",
-    "rad": true,
+    "el": "丿",
+    "label": "ノ",
+    "pos": "top",
+    "rad": false,
     "d": [
-     "M31.26,25.89c0.36,1.36,0.35,2.65-0.05,3.79c-2.34,6.69-7.24,17.22-14.96,24.19",
+     "M31.26,25.89c0.36,1.36,0.35,2.65-0.05,3.79c-2.34,6.69-7.24,17.22-14.96,24.19"
+    ]
+   },
+   {
+    "el": "土",
+    "label": "土",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M31.13,40.67c2.37,0.33,4.03,0.07,5.64-0.12c9.5-1.1,25.15-4.12,35.35-5.83c2.51-0.42,4.86-0.73,7.38-0.33",
      "M52.31,12.63c1.28,1.28,2.01,3.12,2.01,5.23c0,4.01,0,65.14,0,69.77",
      "M29.38,64.03c2.64,0.67,5.38,0.31,8.04-0.02C49.45,62.51,62.16,61,72.5,59.86c2.38-0.26,4.99-0.76,7.38-0.23",
@@ -2252,21 +2445,32 @@
   "radicalNo": 174,
   "radicalName": "あお",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
-    "el": "龶",
+    "el": "土",
+    "label": "土",
     "pos": "top",
     "rad": false,
     "d": [
      "M32.13,21.42c1.62,0.38,4.59,0.54,6.21,0.38c9.16-0.92,21.57-2.3,34.18-3.13c2.69-0.18,3.81-0.09,5.23-0.02",
      "M52.81,8.63c1.15,1.15,1.76,2.62,1.76,4.42c0,0.43-0.09,28.62-0.07,30.19",
-     "M34,33.37c2.39,0.62,4.73,0.4,7.13,0.05c9.07-1.31,22.36-2.96,28.71-3.46c2.21-0.17,3.85-0.08,5.03-0.02",
+     "M34,33.37c2.39,0.62,4.73,0.4,7.13,0.05c9.07-1.31,22.36-2.96,28.71-3.46c2.21-0.17,3.85-0.08,5.03-0.02"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M13.5,47c2.5,0.75,5.8,0.86,8.88,0.55c19.41-1.93,51.54-5.05,65.69-5.8c3.1-0.16,7.07,0,9.3,0.73"
     ]
    },
    {
     "el": "月",
+    "label": "月",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2308,10 +2512,12 @@
   "radicalNo": 36,
   "radicalName": "ゆうべ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "夕",
+    "label": "夕",
     "pos": "",
     "rad": true,
     "d": [
@@ -2354,12 +2560,14 @@
   "radicalNo": 112,
   "radicalName": "いし",
   "radicalPosType": "そのほか",
-  "structure": "parts",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "石",
-    "pos": "",
-    "rad": true,
+    "el": "厂",
+    "label": "厂",
+    "pos": "top",
+    "rad": false,
     "d": [
      "M19.88,26.65c3.2,0.73,6.6,0.59,8.91,0.4c18.28-1.55,33.06-3.55,52.96-4.66c3.87-0.22,6.42-0.02,8.12,0.39",
      "M42.42,29.43c0.33,1.45,0.22,2.69-0.15,4.17C39.38,45,30.75,61.62,15,73.5"
@@ -2367,7 +2575,8 @@
    },
    {
     "el": "口",
-    "pos": "",
+    "label": "口",
+    "pos": "bottom",
     "rad": false,
     "d": [
      "M34.5,56.24c0.71,0.64,1.62,2.13,1.75,2.97c0.87,5.49,1.95,14.48,3.14,24.27c0.2,1.68,0.41,3.36,0.6,5.02",
@@ -2409,10 +2618,12 @@
   "radicalNo": 155,
   "radicalName": "あか",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "土",
+    "label": "土",
     "pos": "top",
     "rad": false,
     "d": [
@@ -2423,6 +2634,7 @@
    },
    {
     "el": "灬",
+    "label": "灬",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2464,10 +2676,12 @@
   "radicalNo": 24,
   "radicalName": "じゅう",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "丿",
+    "label": "ノ",
     "pos": "top",
     "rad": false,
     "d": [
@@ -2476,6 +2690,7 @@
    },
    {
     "el": "十",
+    "label": "十",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -2515,10 +2730,12 @@
   "radicalNo": 47,
   "radicalName": "かわ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "川",
+    "label": "川",
     "pos": "",
     "rad": true,
     "d": [
@@ -2559,14 +2776,24 @@
   "radicalNo": 10,
   "radicalName": "にんにょう",
   "radicalPosType": "あし",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "龶",
+    "label": "ノ",
     "pos": "top",
     "rad": false,
     "d": [
-     "M37.51,21c0.07,0.62,0.15,1.61-0.14,2.49C35.25,29.88,31.62,37.38,24.5,45",
+     "M37.51,21c0.07,0.62,0.15,1.61-0.14,2.49C35.25,29.88,31.62,37.38,24.5,45"
+    ]
+   },
+   {
+    "el": "土",
+    "label": "土",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M38.13,32.04c1.5,0.09,3.95-0.16,4.64-0.22c6.48-0.57,20.36-1.82,27.82-2.94c1.65-0.25,3.66-0.13,5.16,0.27",
      "M52.81,12.38c1.28,1.28,2.01,3.12,2.01,4.75c0,0.75-0.05,31.92-0.07,32.87",
      "M15.88,53.26c3.42,0.98,7.15,0.5,10.62,0.22c15.99-1.3,38.99-3.55,59-4.4c2.94-0.13,5.84-0.03,8.75,0.47"
@@ -2574,6 +2801,7 @@
    },
    {
     "el": "儿",
+    "label": "ル",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -2614,10 +2842,12 @@
   "radicalNo": 72,
   "radicalName": "ひ",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "日",
+    "label": "日",
     "pos": "top",
     "rad": true,
     "d": [
@@ -2629,6 +2859,7 @@
    },
    {
     "el": "十",
+    "label": "十",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2668,10 +2899,12 @@
   "radicalNo": 140,
   "radicalName": "くさかんむり",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "艹",
+    "label": "艹",
     "pos": "top",
     "rad": true,
     "d": [
@@ -2682,6 +2915,7 @@
    },
    {
     "el": "早",
+    "label": "早",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2727,10 +2961,12 @@
   "radicalNo": 157,
   "radicalName": "あし",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "口",
+    "label": "口",
     "pos": "top",
     "rad": false,
     "d": [
@@ -2741,6 +2977,7 @@
    },
    {
     "el": "龰",
+    "label": "止",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2782,10 +3019,12 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "へん",
+  "radicalState": "part",
   "structure": "horizontal",
   "components": [
    {
     "el": "木",
+    "label": "木",
     "pos": "left",
     "rad": true,
     "d": [
@@ -2797,6 +3036,7 @@
    },
    {
     "el": "寸",
+    "label": "寸",
     "pos": "right",
     "rad": false,
     "d": [
@@ -2839,14 +3079,24 @@
   "radicalNo": 37,
   "radicalName": "だい",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "parts",
   "components": [
    {
-    "el": "大",
-    "pos": "",
-    "rad": true,
+    "el": "一",
+    "label": "一",
+    "pos": "top",
+    "rad": false,
     "d": [
-     "M19.38,48.25c1.49,0.51,5.03,0.89,7.6,0.49C41.12,46.5,63,43,77.19,42.44c2.7-0.11,4.87-0.06,7.31,0.33",
+     "M19.38,48.25c1.49,0.51,5.03,0.89,7.6,0.49C41.12,46.5,63,43,77.19,42.44c2.7-0.11,4.87-0.06,7.31,0.33"
+    ]
+   },
+   {
+    "el": "人",
+    "label": "人",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M49.5,18c0.88,2.12,1.03,4.16,0.99,6.32C50,57,37.75,81.12,18,91.75",
      "M49.5,46c9,10.5,28.5,36.25,37.49,43.28c3.06,2.39,5.62,3.75,7.01,3.97"
     ]
@@ -2884,10 +3134,12 @@
   "radicalNo": 102,
   "radicalName": "た",
   "radicalPosType": "かんむり",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "田",
+    "label": "田",
     "pos": "top",
     "rad": true,
     "d": [
@@ -2900,6 +3152,7 @@
    },
    {
     "el": "力",
+    "label": "力",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -2938,17 +3191,27 @@
   "strokes": 6,
   "radicalNo": 118,
   "radicalName": "たけ",
-  "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalPosType": "へん",
+  "radicalState": "whole",
+  "structure": "horizontal",
   "components": [
    {
     "el": "竹",
-    "pos": "",
+    "label": "ケ",
+    "pos": "left",
     "rad": true,
     "d": [
      "M30.2,16.43c0.17,0.95,0.19,2.1-0.09,3.24c-1.74,7.09-7.28,22.56-15.48,31.74",
      "M24.48,43.58c6.14,0.04,14.59-2.46,21.58-3.72c1.9-0.34,3.43-0.56,4.32-0.56",
-     "M35.21,45.61c0.96,0.96,1.55,2.39,1.55,4.13c0,10.53-0.09,29.94-0.24,40.26c-0.04,3.02-0.07,4.71-0.07,5.62",
+     "M35.21,45.61c0.96,0.96,1.55,2.39,1.55,4.13c0,10.53-0.09,29.94-0.24,40.26c-0.04,3.02-0.07,4.71-0.07,5.62"
+    ]
+   },
+   {
+    "el": "竹",
+    "label": "ケ",
+    "pos": "right",
+    "rad": false,
+    "d": [
      "M68.7,11.68c0.43,1.2,0.21,2.55-0.1,3.79C66.25,24.75,59.75,38,51.14,49.4",
      "M64.48,36.08c8.14,0.04,20.64-3.08,28.54-4.71c2.1-0.43,3.83-0.57,4.86-0.57",
      "M76.77,37.83c1.08,1.08,2.01,2.79,2.01,5.02c0,14.56-0.01,42.16-0.01,47.12c0,11.03-4.89,4.66-7.96,1"
@@ -2986,10 +3249,12 @@
   "radicalNo": 2,
   "radicalName": "ぼう",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "parts",
   "components": [
    {
     "el": "口",
+    "label": "口",
     "pos": "",
     "rad": false,
     "d": [
@@ -3000,6 +3265,7 @@
    },
    {
     "el": "丨",
+    "label": "丨",
     "pos": "",
     "rad": true,
     "d": [
@@ -3038,32 +3304,20 @@
   "radicalNo": 142,
   "radicalName": "むし",
   "radicalPosType": "そのほか",
-  "structure": "parts",
+  "radicalState": "whole",
+  "structure": "single",
   "components": [
    {
-    "el": "中",
+    "el": "虫",
+    "label": "虫",
     "pos": "",
-    "rad": false,
+    "rad": true,
     "d": [
      "M23.64,36.26c0.8,0.8,1.49,1.74,1.7,2.54c1.23,4.63,2.06,10.62,3.38,18.66c0.25,1.52,0.51,3.11,0.78,4.78",
      "M25.76,38.04c14.91-1.35,45.03-4.16,53.74-4.54c3.84-0.17,4.01,1.78,3.63,4.25c-0.68,4.46-2.51,12.12-4.07,17.32",
      "M30,60c9.65-0.99,29.67-2.45,44.76-3.49c2.03-0.14,3.98-0.27,5.79-0.4",
-     "M52.51,16.12c1,1,1.67,2.84,1.67,3.99c0,5.39,0.08,62.61,0.04,63.63"
-    ]
-   },
-   {
-    "el": "丨",
-    "pos": "",
-    "rad": false,
-    "d": [
-     "M22.75,89.75c1.31,1.31,3,1.5,4.25,1.25s47-10.5,54.75-12.5"
-    ]
-   },
-   {
-    "el": "丶",
-    "pos": "",
-    "rad": false,
-    "d": [
+     "M52.51,16.12c1,1,1.67,2.84,1.67,3.99c0,5.39,0.08,62.61,0.04,63.63",
+     "M22.75,89.75c1.31,1.31,3,1.5,4.25,1.25s47-10.5,54.75-12.5",
      "M74.96,69.87c5.12,3.62,12.42,14.38,14.5,20.5"
     ]
    }
@@ -3099,10 +3353,12 @@
   "radicalNo": 102,
   "radicalName": "た",
   "radicalPosType": "へん",
+  "radicalState": "part",
   "structure": "horizontal",
   "components": [
    {
     "el": "田",
+    "label": "田",
     "pos": "left",
     "rad": true,
     "d": [
@@ -3115,6 +3371,7 @@
    },
    {
     "el": "丁",
+    "label": "丁",
     "pos": "right",
     "rad": false,
     "d": [
@@ -3154,10 +3411,12 @@
   "radicalNo": 37,
   "radicalName": "だい",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "一",
+    "label": "一",
     "pos": "top",
     "rad": false,
     "d": [
@@ -3166,6 +3425,7 @@
    },
    {
     "el": "大",
+    "label": "大",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -3206,18 +3466,28 @@
   "radicalNo": 102,
   "radicalName": "た",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "enclose",
   "components": [
    {
-    "el": "田",
-    "pos": "",
-    "rad": true,
+    "el": "囗",
+    "label": "囗",
+    "pos": "kamae",
+    "rad": false,
     "d": [
      "M18.25,27.48c1.2,1.2,2.11,2.68,2.28,3.95C22,42.25,23.52,62.11,24.81,80c0.17,2.4,0.34,3.75,0.49,6",
      "M20.85,29.29c8.52-0.54,50.04-3.17,61.58-4.05c4.84-0.37,7.32,2.01,7.04,5.63c-0.69,8.8-2.83,30.69-3.99,46.64c-0.18,2.44-0.34,4.75-0.47,6.86",
-     "M53.25,29c0.88,0.88,1.19,2.12,1.19,3.5c0,9.52,0.31,46.37,0.31,47.25",
-     "M24,55.5c5.75-0.5,55.12-3.25,62.5-3.5",
      "M25.98,83.07c14.77-0.82,39.39-2.07,58.18-2.83"
+    ]
+   },
+   {
+    "el": "十",
+    "label": "十",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M53.25,29c0.88,0.88,1.19,2.12,1.19,3.5c0,9.52,0.31,46.37,0.31,47.25",
+     "M24,55.5c5.75-0.5,55.12-3.25,62.5-3.5"
     ]
    }
   ],
@@ -3253,15 +3523,25 @@
   "radicalNo": 32,
   "radicalName": "つち",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "土",
-    "pos": "",
-    "rad": true,
+    "el": "十",
+    "label": "十",
+    "pos": "top",
+    "rad": false,
     "d": [
      "M26.63,50.89c1.63,0.4,4.64,0.6,6.26,0.4C43.5,50,62.12,48,75.66,46.92c2.71-0.22,4.36,0.19,5.72,0.39",
-     "M52.17,17.37c1.17,1.17,2.02,3.13,2.02,4.64c0,10.25,0.14,61.06,0.14,63.36",
+     "M52.17,17.37c1.17,1.17,2.02,3.13,2.02,4.64c0,10.25,0.14,61.06,0.14,63.36"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M15.38,87.73c2.12,0.54,6.01,0.73,8.12,0.54C46,86.25,69,84.62,90.34,83.79c3.53-0.14,5.65,0.26,7.41,0.53"
     ]
    }
@@ -3297,14 +3577,24 @@
   "radicalNo": 7,
   "radicalName": "に",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "二",
-    "pos": "",
-    "rad": true,
+    "el": "一",
+    "label": "一",
+    "pos": "top",
+    "rad": false,
     "d": [
-     "M25.25,32.4c1.77,0.37,4.78,0.56,6.55,0.37c10.82-1.15,28.82-3.4,41.24-3.76c2.95-0.09,4.73,0.18,6.21,0.36",
+     "M25.25,32.4c1.77,0.37,4.78,0.56,6.55,0.37c10.82-1.15,28.82-3.4,41.24-3.76c2.95-0.09,4.73,0.18,6.21,0.36"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M12,80.75c2.37,0.5,6.73,0.67,9.09,0.5c23.79-1.75,45.04-4.12,67.49-4.74c3.95-0.11,6.32,0.24,8.3,0.49"
     ]
    }
@@ -3342,17 +3632,27 @@
   "radicalNo": 72,
   "radicalName": "ひ",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "enclose",
   "components": [
    {
-    "el": "日",
-    "pos": "",
-    "rad": true,
+    "el": "囗",
+    "label": "囗",
+    "pos": "kamae",
+    "rad": false,
     "d": [
      "M31.5,24.5c1.12,1.12,1.74,2.75,1.74,4.75c0,1.6-0.16,38.11-0.09,53.5c0.02,3.82,0.05,6.35,0.09,6.75",
      "M33.48,26c0.8-0.05,37.67-3.01,40.77-3.25c3.19-0.25,5,1.75,5,4.25c0,4-0.22,40.84-0.23,56c0,3.48,0,5.72,0,6",
-     "M34.22,55.25c7.78-0.5,35.9-2.5,44.06-2.75",
      "M34.23,86.5c10.52-0.75,34.15-2.12,43.81-2.25"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M34.22,55.25c7.78-0.5,35.9-2.5,44.06-2.75"
     ]
    }
   ],
@@ -3388,10 +3688,12 @@
   "radicalNo": 11,
   "radicalName": "いる",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "入",
+    "label": "入",
     "pos": "",
     "rad": true,
     "d": [
@@ -3431,10 +3733,12 @@
   "radicalNo": 51,
   "radicalName": "かん",
   "radicalPosType": "そのほか",
+  "radicalState": "name",
   "structure": "single",
   "components": [
    {
     "el": "年",
+    "label": "年",
     "pos": "",
     "rad": false,
     "d": [
@@ -3481,10 +3785,12 @@
   "radicalNo": 106,
   "radicalName": "しろ",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "丿",
+    "label": "ノ",
     "pos": "top",
     "rad": false,
     "d": [
@@ -3493,6 +3799,7 @@
    },
    {
     "el": "日",
+    "label": "日",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -3536,10 +3843,12 @@
   "radicalNo": 12,
   "radicalName": "はち",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "八",
+    "label": "八",
     "pos": "",
     "rad": true,
     "d": [
@@ -3577,10 +3886,12 @@
   "radicalNo": 106,
   "radicalName": "しろ",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "一",
+    "label": "一",
     "pos": "top",
     "rad": false,
     "d": [
@@ -3589,6 +3900,7 @@
    },
    {
     "el": "白",
+    "label": "白",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -3632,10 +3944,12 @@
   "radicalNo": 67,
   "radicalName": "ぶん",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "vertical",
   "components": [
    {
     "el": "亠",
+    "label": "亠",
     "pos": "top",
     "rad": false,
     "d": [
@@ -3645,6 +3959,7 @@
    },
    {
     "el": "乂",
+    "label": "メ",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -3686,15 +4001,25 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "木",
-    "pos": "",
-    "rad": true,
+    "el": "十",
+    "label": "十",
+    "pos": "top",
+    "rad": false,
     "d": [
      "M19.5,39.86c2.45,0.57,5.23,0.8,8.04,0.57C40.75,39.38,63,36.5,79.78,36.15c2.8-0.06,4.54,0.1,7.34,0.5",
-     "M51.75,10.5c1.19,1.19,2,3,2,5c0,8.65,0,55.15-0.14,74.75c-0.03,4.19-0.07,7.15-0.11,8.25",
+     "M51.75,10.5c1.19,1.19,2,3,2,5c0,8.65,0,55.15-0.14,74.75c-0.03,4.19-0.07,7.15-0.11,8.25"
+    ]
+   },
+   {
+    "el": "八",
+    "label": "ハ",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M50.75,39.5c0,1.12-0.61,2.44-1.42,3.95C41.75,57.5,26.7,73.93,15.75,80.25",
      "M54.5,39c4.62,6,23,25.75,31.76,34.61c2.27,2.29,4.61,4.39,7.49,5.64"
     ]
@@ -3731,10 +4056,12 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "木",
+    "label": "木",
     "pos": "",
     "rad": true,
     "d": [
@@ -3746,6 +4073,7 @@
    },
    {
     "el": "一",
+    "label": "一",
     "pos": "bottom",
     "rad": false,
     "d": [
@@ -3785,10 +4113,12 @@
   "radicalNo": 30,
   "radicalName": "くち",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "夕",
+    "label": "夕",
     "pos": "top",
     "rad": false,
     "d": [
@@ -3799,6 +4129,7 @@
    },
    {
     "el": "口",
+    "label": "口",
     "pos": "bottom",
     "rad": true,
     "d": [
@@ -3840,18 +4171,28 @@
   "radicalNo": 109,
   "radicalName": "め",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "enclose",
   "components": [
    {
-    "el": "目",
-    "pos": "",
-    "rad": true,
+    "el": "囗",
+    "label": "囗",
+    "pos": "kamae",
+    "rad": false,
     "d": [
      "M29.75,19.05c1.35,1.35,1.86,3.21,1.86,5.47c0,1.77,0.19,42.37,0.06,60.23c-0.04,4.91-0.06,8.11-0.06,8.36",
      "M32.54,21.39c10.92-1.23,38.33-4.11,41.42-4.38c3.25-0.28,5.54,1.25,5.54,4.18c0,8.95-0.26,39.93-0.26,64.82c0,3,0.01,3.75,0.01,6",
-     "M33.05,43.64c12.45-1.51,34.83-3.51,45.18-4.09",
-     "M32.9,65.95C44.25,65,66,62.88,77.72,62.56",
      "M33,90.5c9.75-0.5,33.25-2.5,44.79-2.53"
+    ]
+   },
+   {
+    "el": "二",
+    "label": "二",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M33.05,43.64c12.45-1.51,34.83-3.51,45.18-4.09",
+     "M32.9,65.95C44.25,65,66,62.88,77.72,62.56"
     ]
    }
   ],
@@ -3887,17 +4228,43 @@
   "radicalNo": 117,
   "radicalName": "たつ",
   "radicalPosType": "そのほか",
-  "structure": "single",
+  "radicalState": "whole",
+  "structure": "vertical",
   "components": [
    {
-    "el": "立",
-    "pos": "",
-    "rad": true,
+    "el": "丶",
+    "label": "丶",
+    "pos": "top",
+    "rad": false,
     "d": [
-     "M51.51,15c1.43,1.43,2.24,3.25,2.24,5.81c0,4.06,0,9.56,0,13.69",
-     "M22,37.86c2.62,0.51,4.75,0.34,7,0.16c11.38-0.9,36.13-3.4,50.65-4.26c2.38-0.14,4.86-0.01,6.86,0.4",
+     "M51.51,15c1.43,1.43,2.24,3.25,2.24,5.81c0,4.06,0,9.56,0,13.69"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "",
+    "rad": false,
+    "d": [
+     "M22,37.86c2.62,0.51,4.75,0.34,7,0.16c11.38-0.9,36.13-3.4,50.65-4.26c2.38-0.14,4.86-0.01,6.86,0.4"
+    ]
+   },
+   {
+    "el": "八",
+    "label": "ハ",
+    "pos": "",
+    "rad": false,
+    "d": [
      "M32,49c4.75,9.75,8.25,22.5,9.5,31.5",
-     "M74,39c0.75,1.38,0.81,3.29,0.5,4.5c-2.88,11.12-8.5,30.38-12.75,42",
+     "M74,39c0.75,1.38,0.81,3.29,0.5,4.5c-2.88,11.12-8.5,30.38-12.75,42"
+    ]
+   },
+   {
+    "el": "一",
+    "label": "一",
+    "pos": "bottom",
+    "rad": false,
+    "d": [
      "M15.25,88.8c2.33,0.45,5.89,0.53,7.82,0.39c18.3-1.32,40.31-1.94,64.83-2.75c3.24-0.11,6.14,0.05,8.47,0.88"
     ]
    }
@@ -3934,10 +4301,12 @@
   "radicalNo": 19,
   "radicalName": "ちから",
   "radicalPosType": "そのほか",
+  "radicalState": "whole",
   "structure": "single",
   "components": [
    {
     "el": "力",
+    "label": "力",
     "pos": "",
     "rad": true,
     "d": [
@@ -3977,10 +4346,12 @@
   "radicalNo": 75,
   "radicalName": "き",
   "radicalPosType": "へん",
+  "radicalState": "part",
   "structure": "horizontal",
   "components": [
    {
     "el": "木",
+    "label": "木",
     "pos": "left",
     "rad": true,
     "d": [
@@ -3992,6 +4363,7 @@
    },
    {
     "el": "木",
+    "label": "木",
     "pos": "right",
     "rad": false,
     "d": [
@@ -4035,10 +4407,12 @@
   "radicalNo": 12,
   "radicalName": "はち",
   "radicalPosType": "そのほか",
+  "radicalState": "part",
   "structure": "vertical",
   "components": [
    {
     "el": "亠",
+    "label": "亠",
     "pos": "top",
     "rad": false,
     "d": [
@@ -4048,6 +4422,7 @@
    },
    {
     "el": "八",
+    "label": "ハ",
     "pos": "bottom",
     "rad": true,
     "d": [
