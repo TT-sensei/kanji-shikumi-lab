@@ -86,12 +86,18 @@ function celebrate(){
   burst();
 }
 
-/* ---------- ガイド（ナビキャラ：かい） ---------- */
+/* ---------- ガイド（ナビキャラ6人から開くたびランダム） ---------- */
+const NAVI_CHARS = [
+  {id:"riku", name:"りく"}, {id:"sora", name:"そら"}, {id:"kai", name:"かい"},
+  {id:"saku", name:"さく"}, {id:"tsuki", name:"つき"}, {id:"nami", name:"なみ"}
+];
+const GUIDE_CHAR = NAVI_CHARS[Math.floor(Math.random() * NAVI_CHARS.length)];
+const FACE_BASE = `https://tt-sensei.github.io/navi-character-/assets/web/characters/${GUIDE_CHAR.id}/expressions/`;
 const FACE = {
-  normal: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/01-normal-smile.webp",
-  happy: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/02-happy.webp",
-  think: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/03-thinking.webp",
-  celeb: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/08-celebrating.webp"
+  normal: FACE_BASE + "01-normal-smile.webp",
+  happy: FACE_BASE + "02-happy.webp",
+  think: FACE_BASE + "03-thinking.webp",
+  celeb: FACE_BASE + "08-celebrating.webp"
 };
 function setGuide(face, line){
   const img = document.getElementById("guideImg");
@@ -668,6 +674,8 @@ function renderParts(){
 
 /* ---------- 出典・初期化 ---------- */
 function init(){
+  const gi = document.getElementById("guideImg");
+  if(gi){ gi.src = FACE.normal; gi.alt = GUIDE_CHAR.name; }
   renderTop();
   document.getElementById("btnParts").addEventListener("click", () => { sndTap(); renderParts(); });
   document.getElementById("btnSources").addEventListener("click", () => { sndTap(); showView("view-sources"); });
