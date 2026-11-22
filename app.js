@@ -1,7 +1,7 @@
 "use strict";
-/* 漢字のしくみラボ（仮称） プロトタイプ: 1・2年生 240字 */
-const GRADE_DATA = {1: window.KSL_G1 || [], 2: window.KSL_G2 || []};
-const GRADE_TEXT = {1: window.KSL_TEXT || {}, 2: window.KSL_TEXT2 || {}};
+/* 漢字のしくみラボ（仮称） プロトタイプ: 1・2・3年生 440字 */
+const GRADE_DATA = {1: window.KSL_G1 || [], 2: window.KSL_G2 || [], 3: window.KSL_G3 || []};
+const GRADE_TEXT = {1: window.KSL_TEXT || {}, 2: window.KSL_TEXT2 || {}, 3: window.KSL_TEXT3 || {}};
 let curGrade = 1;
 let DATA = GRADE_DATA[1];
 let TEXT = GRADE_TEXT[1];
@@ -218,7 +218,7 @@ function partLinkTarget(c, selfKanji){
   // 部品そのものが 学習する漢字（1・2年生）なら、その字へのリンクを返す
   for(const cand of [c.el, labelOf(c)]){
     if(!cand || cand === selfKanji) continue;
-    for(const gr of [1, 2]){
+    for(const gr of [1, 2, 3]){
       if(GRADE_DATA[gr].some(r => r.kanji === cand)) return {kanji: cand, grade: gr};
     }
   }

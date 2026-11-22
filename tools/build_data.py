@@ -18,7 +18,7 @@ KVG = "{http://kanjivg.tagaini.net}"
 Path("/tmp/kanjiapp").mkdir(exist_ok=True)
 Path("/tmp/kvg").mkdir(exist_ok=True)
 
-for fn in ("kanji-data.js", "kanjiExampleData_1.js", "kanjiExampleData_2.js"):
+for fn in ("kanji-data.js", "kanjiExampleData_1.js", "kanjiExampleData_2.js", "kanjiExampleData_3.js"):
     fp = Path("/tmp/kanjiapp") / fn
     if not fp.exists():
         urllib.request.urlretrieve(f"https://raw.githubusercontent.com/TT-sensei/kanjiapp/main/{fn}", fp)
@@ -60,12 +60,24 @@ for entry in packed2.split("|"):
     readings2[k] = {"on": on, "kun": kun}
     order2.append(k)
 examples2 = parse_examples("kanjiExampleData_2.js")
+packed3 = re.search(r'3:"([^"]+)"', src).group(1)
+readings3, order3 = {}, []
+for entry in packed3.split("|"):
+    k, r = entry.split(":", 1)
+    on, kun = [], []
+    for tok in r.split(","):
+        tok = tok.strip()
+        if tok:
+            (on if re.match(r'^[ァ-ヶー]', tok) else kun).append(tok)
+    readings3[k] = {"on": on, "kun": kun}
+    order3.append(k)
+examples3 = parse_examples("kanjiExampleData_3.js")
 
 kd = gzip.open(kd_gz, "rt", encoding="utf-8").read()
 info = {}
 for block in re.findall(r"<character>.*?</character>", kd, re.S):
     lit = re.search(r"<literal>(.)</literal>", block).group(1)
-    if lit in readings or lit in readings2:
+    if lit in readings or lit in readings2 or lit in readings3:
         rad = re.search(r'<rad_value rad_type="classical">(\d+)</rad_value>', block)
         st = re.search(r"<stroke_count>(\d+)</stroke_count>", block)
         info[lit] = {"radicalNo": int(rad.group(1)) if rad else None,
@@ -262,10 +274,14 @@ RADICAL_NAMES = {1:"いち",2:"ぼう",5:"おつ",7:"に",9:"ひと",10:"にん�
     137:"ふね",139:"いろ",144:"ぎょうがまえ",146:"にし",148:"つの",149:"ごん",150:"たに",
     156:"そうにょう",162:"しんにょう",166:"さと",168:"ながい",169:"もん",181:"おおがい",
     182:"かぜ",184:"しょく",185:"くび",187:"うま",189:"たか",195:"うお",196:"とり",
-    199:"むぎ",201:"き",203:"くろ"}
+    199:"むぎ",201:"き",203:"くろ",
+    4:"の",6:"はねぼう",14:"わかんむり",23:"はこがまえ",28:"む",44:"しかばね",56:"しきがまえ",
+    78:"がつ",104:"やまいだれ",105:"はつがしら",107:"けがわ",108:"さら",123:"ひつじ",143:"ち",
+    145:"ころも",151:"まめ",158:"み",161:"たつ",163:"おおざと",164:"とり",170:"こざと",
+    172:"ふるとり",176:"めん",209:"はな"}
 VARIANT_NAMES = {"亻":"にんべん","氵":"さんずい","扌":"てへん","艹":"くさかんむり","宀":"うかんむり",
     "冖":"わかんむり","灬":"れっか","阝":"こざとへん","刂":"りっとう","忄":"りっしんべん",
-    "礻":"ねへん","ネ":"ねへん"}
+    "礻":"ねへん","ネ":"ねへん","阜":"こざとへん","邑":"おおざと","衤":"ころもへん"}
 POS_TYPE = {"left":"へん","right":"つくり","top":"かんむり","bottom":"あし","kamae":"かまえ"}
 RADICAL_ELEMENT = {1:"一",2:"丨",5:"乙",7:"二",9:"人",10:"儿",11:"入",12:"八",13:"冂",17:"凵",19:"力",
     24:"十",30:"口",31:"囗",32:"土",36:"夕",37:"大",38:"女",39:"子",42:"小",46:"山",47:"川",48:"工",
@@ -277,11 +293,17 @@ RADICAL_ELEMENT = {1:"一",2:"丨",5:"乙",7:"二",9:"人",10:"儿",11:"入",12:
     80:"毋",82:"毛",88:"父",93:"牛",101:"用",111:"矢",113:"示",115:"禾",119:"米",124:"羽",125:"老",
     130:"肉",132:"自",137:"舟",139:"色",144:"行",146:"襾",148:"角",149:"言",150:"谷",156:"走",
     162:"辶",166:"里",168:"長",169:"門",181:"頁",182:"風",184:"食",185:"首",187:"馬",189:"高",
-    195:"魚",196:"鳥",199:"麦",201:"黄",203:"黒"}
+    195:"魚",196:"鳥",199:"麦",201:"黄",203:"黒",
+    4:"丿",6:"亅",14:"冖",23:"匚",28:"厶",44:"尸",56:"弋",78:"歹",104:"疒",105:"癶",107:"皮",
+    108:"皿",123:"羊",143:"血",145:"衣",151:"豆",158:"身",161:"辰",163:"邑",164:"酉",170:"阜",
+    172:"隹",176:"面",209:"鼻"}
 RADICAL_VARIANTS = {9:["亻","人"],85:["氵","水"],64:["扌","手"],96:["玉","王"],140:["艹"],147:["見"],
     18:["刂","刀"],40:["宀"],61:["忄","心"],80:["毋","母"],113:["礻","示","ネ"],125:["耂","老"],
     130:["月","肉"],149:["言"],156:["走"],162:["辶"],184:["飠","食"],201:["黄"],203:["黒"],
-    86:["火","灬"]}
+    86:["火","灬"],
+    4:["丿"],6:["亅"],14:["冖"],23:["匚"],28:["厶"],44:["尸"],56:["弋"],78:["歹"],104:["疒"],
+    105:["癶"],107:["皮"],108:["皿"],123:["羊"],143:["血"],145:["衣","衤"],151:["豆"],158:["身"],
+    161:["辰"],163:["邑"],164:["酉"],170:["阜"],172:["隹"],176:["面"],209:["鼻"]}
 
 def derive_structure(comps):
     if len(comps) <= 1:
@@ -413,7 +435,7 @@ def annotate_flat(root):
     rec(root)
     return counter[0]
 
-def align_parts(root, parts):
+def align_parts(root, parts, alias=None):
     """ユーザーの部品リストに一致するツリーノードの分割を探す。見つからなければ None。
     候補の優先順: 内部名が合うノード → 同名ノードの合体（囲みの枠など） → 名なしグループ → 浮いた画のまとまり。"""
     total = annotate_flat(root)
@@ -456,7 +478,7 @@ def align_parts(root, parts):
     tier4 = [{"idxs": [idx_of[d] for d in run], "d": list(run), "el": None, "pos": ""} for run in tier4 if run]
     cands = tier1 + tier2 + tier3 + tier4
     def els_for(label):
-        return set(ALIAS2.get(label, [])) | {label}
+        return set((alias or ALIAS2).get(label, [])) | {label}
     def search(pi, used, min_start, strict):
         if pi == len(parts):
             return [] if len(used) == total else None
@@ -591,3 +613,127 @@ if _txt2.exists():
     _t2 = json.loads(_txt2.read_text(encoding="utf-8"))
     (_txt2.parent / "text2.js").write_text("window.KSL_TEXT2=" + json.dumps(_t2, ensure_ascii=False) + ";", encoding="utf-8")
 print("wrote kanji2.json", (OUT / "kanji2.json").stat().st_size, "bytes")
+
+
+# ================= 3年生 =================
+# ユーザーが他AIと作成した唱え歌データ（部品リスト）を正として、2年生と同じ方法で照合する。
+_draft3 = (Path(__file__).resolve().parent.parent / "original" / "chants3-user-draft.js").read_text(encoding="utf-8")
+USER3 = {}
+for _m in re.finditer(r'\["(.)",\[(.*?)\],"([^"]+)"\]', _draft3):
+    _ps = [x.strip().strip('"') for x in _m.group(2).split(",") if x.strip()]
+    USER3[_m.group(1)] = {"parts": _ps, "chant": _m.group(3)}
+
+ALIAS3 = dict(ALIAS2)
+ALIAS3.update({"阝": ["阜", "邑", "⻖", "⻏"], "艹": ["艸", "艹"], "コ": ["𠂉", "𠂊"],
+               "匚": ["匸"], "食": ["飠"], "巳": ["己"], "小": ["⺌"], "入": ["人"],
+               "水": ["氺"], "柬": ["東"], "乚": ["乙", "乚"], "羊": ["⺷"], "爫": ["⺤"],
+               "自": ["𠂤"]})
+
+STRUCT_OVERRIDES3 = {"運": "enclose", "進": "enclose", "送": "enclose", "速": "enclose",
+                     "追": "enclose", "返": "enclose", "遊": "enclose"}
+# 歯: ユーザーの部品「人」は画が合わない（下部は凵+米）ため「凵」に直す（報告済みの判断）。
+USER3["歯"]["parts"] = ["止", "凵", "米"]
+# 画単位の分割（3年生）: 自動照合で決まらない字を、KanjiVGの画タイプと画順で実測して手で決めたもの。
+# (内部名, 表示名, 位置, 画インデックス群)
+STROKE_SPLITS3 = {
+    "央": [("冂","冂","kamae",[0,1]), ("大","大","bottom",[2,3,4])],
+    "屋": [("尸","尸","tare",[0,1,2]), ("一","一","",[3]), ("厶","ム","",[4,5]), ("土","土","bottom",[6,7,8])],
+    "開": [("門","門","kamae",[0,1,2,3,4,5,6,7]), ("二","二","",[8,9]), ("丿","ノ","",[10]), ("丨","丨","",[11])],
+    "寒": [("宀","宀","top",[0,1,2]), ("艹","艹","",[3,4,5]), ("二","二","",[6,7]), ("八","ハ","",[8,9]), ("冫","冫","bottom",[10,11])],
+    "感": [("戊","戊","top",[0,1,6,7,8]), ("一","一","",[2]), ("口","口","",[3,4,5]), ("心","心","bottom",[9,10,11,12])],
+    "宮": [("宀","宀","top",[0,1,2]), ("口","口","",[3,4,5]), ("丿","丨","",[6]), ("口","口","bottom",[7,8,9])],
+    "局": [("尸","尸","tare",[0,1,2]), ("勹","一","",[3]), ("口","口","bottom",[4,5,6])],
+    "決": [("氵","氵","left",[0,1,2]), ("𠂉","コ","",[3,4]), ("人","人","right",[5,6])],
+    "研": [("石","石","left",[0,1,2,3,4]), ("二","二","",[5,6]), ("丿","ノ","",[7]), ("丨","丨","",[8])],
+    "実": [("宀","宀","top",[0,1,2]), ("三","ソ","",[3,4]), ("大","大","bottom",[5,6,7])],
+    "重": [("丿","ノ","top",[0]), ("一","一","",[1]), ("里","里","bottom",[2,3,4,5,6,7,8])],
+    "商": [("亠","亠","top",[0,1]), ("八","ハ","",[2,3]), ("冂","冂","kamae",[4,5]), ("儿","ル","",[6,7]), ("口","口","bottom",[8,9,10])],
+    "勝": [("月","月","left",[0,1,2,3]), ("丷","ソ","top",[4,5]), ("夫","夫","",[6,7,8,9]), ("力","力","bottom",[10,11])],
+    "送": [("辶","辶","nyo",[6,7,8]), ("丷","ソ","top",[0,1]), ("天","夫","",[2,3,4,5])],
+    "族": [("方","方","left",[0,1,2,3]), ("丿","ノ","",[4]), ("一","一","",[5]), ("矢","矢","right",[6,7,8,9,10])],
+    "調": [("言","言","left",[0,1,2,3,4,5,6]), ("冂","冂","kamae",[7,8]), ("士","土","",[9,10,11]), ("口","口","bottom",[12,13,14])],
+    "豆": [("一","一","top",[0]), ("口","口","",[1,2,3]), ("一","一","",[6]), ("八","ハ","bottom",[4,5])],
+    "島": [("丿","ノ","top",[0]), ("白","白","",[1,2,3,4,5]), ("一","一","",[6]), ("山","山","bottom",[7,8,9])],
+    "勉": [("𠂊","ク","",[0,1]), ("日","日","",[2,3,4,5]), ("儿","ル","bottom",[6,7]), ("力","力","",[8,9])],
+    "味": [("口","口","left",[0,1,2]), ("一","一","",[3]), ("木","木","right",[4,5,6,7])],
+    "遊": [("辶","辶","nyo",[9,10,11]), ("方","方","",[0,1,2,3]), ("丿","ノ","",[4]), ("一","一","",[5]), ("子","子","",[6,7,8])],
+    "予": [("マ","マ","top",[0,1]), ("一","一","",[2]), ("亅","亅","bottom",[3])],
+    "羊": [("䒑","ソ","top",[0,1,2]), ("王","王","bottom",[3,4,5])],
+    "旅": [("方","方","left",[0,1,2,3]), ("丿","ノ","",[4]), ("一","一","",[5]), ("亻","人","",[6,7]), ("人","人","bottom",[8,9])],
+}
+
+records3, unmatched3 = [], []
+for ch in order3:
+    tree = ET.parse(fetch_svg(ch))
+    sp = next(g for g in tree.getroot().iter(SVG + "g") if (g.get("id") or "").startswith("kvg:StrokePaths"))
+    root = parse_node(list(sp)[0])
+    uparts = USER3[ch]["parts"]
+    rad_idxs = radical_stroke_idxs(root)
+    counter = [0]
+    all_flat = node_flat(root, counter)
+    idx_of_d = {}
+    for i, d in all_flat:
+        idx_of_d.setdefault(d, i)
+    if ch in STROKE_SPLITS3:
+        comps = [{"el": el, "label": lab, "pos": pos, "rad": False,
+                  "d": [all_flat[i][1] for i in idxs], "_idxs": list(idxs)}
+                 for el, lab, pos, idxs in STROKE_SPLITS3[ch]]
+    elif not uparts:
+        comps = [{"el": ch, "label": ch, "pos": "", "rad": False, "d": [d for _, d in all_flat], "_idxs": [i for i, _ in all_flat]}]
+    else:
+        got = align_parts(root, uparts, ALIAS3)
+        if got is None:
+            unmatched3.append(ch)
+            comps = merge_parts(raw_components(list(sp)[0], ch), ch)
+            for c in comps:
+                c.pop("_grp", None); c.pop("part", None); c.pop("_bare", None)
+                c.pop("_noel_grp", None); c.pop("_noel_pos", None)
+                c["label"] = c["el"]
+                c["_idxs"] = [idx_of_d.get(d, -1) for d in c["d"]]
+        else:
+            comps = [{"el": c["el"], "label": lab, "pos": c["pos"], "rad": False,
+                      "d": c["d"], "_idxs": c["idxs"]} for c, lab in zip(got, uparts)]
+    rno = info[ch]["radicalNo"]
+    targets = set(RADICAL_VARIANTS.get(rno, [])) | {RADICAL_ELEMENT.get(rno, "")}
+    rad_comp = None
+    for c in comps:
+        if c["el"] in targets or (rad_idxs and set(c["_idxs"]) == rad_idxs):
+            rad_comp = c
+            break
+    for c in comps:
+        c["rad"] = (c is rad_comp)
+        c.pop("_idxs", None)
+    if RADICAL_ELEMENT.get(rno) == ch or (len(comps) == 1 and rad_comp is not None):
+        radical_state = "whole"
+    elif rad_comp is not None:
+        radical_state = "part"
+    else:
+        radical_state = "name"
+    rname = RADICAL_NAMES.get(rno, "")
+    if rad_comp and rad_comp["el"] in VARIANT_NAMES:
+        rname = VARIANT_NAMES[rad_comp["el"]]
+    if rad_comp is None:
+        ptype = "そのほか"
+    elif rad_comp["pos"] == "bottom" and rad_comp["el"] not in ("儿", "龰", "灬", "心"):
+        ptype = "そのほか"
+    else:
+        ptype = POS_TYPE.get(rad_comp["pos"], "そのほか")
+    records3.append({"kanji": ch, "grade": 3, "on": readings3[ch]["on"], "kun": readings3[ch]["kun"],
+        "strokes": info[ch]["strokes"], "radicalNo": rno, "radicalName": rname,
+        "radicalPosType": ptype, "radicalState": radical_state,
+        "structure": STRUCT_OVERRIDES3.get(ch, derive_structure(comps)),
+        "components": [{"el": c["el"], "label": c.get("label", c["el"]), "pos": c["pos"], "rad": bool(c["rad"]), "d": c["d"]} for c in comps],
+        "examples": examples3.get(ch, [])})
+
+print("G3 structures:", Counter(r["structure"] for r in records3))
+print("G3 comp counts:", Counter(len(r["components"]) for r in records3))
+print("G3 radical states:", Counter(r["radicalState"] for r in records3))
+print("G3 unmatched (fallback to KanjiVG top-level):", len(unmatched3), unmatched3)
+print("G3 empty radicalName:", [r["kanji"] for r in records3 if not r["radicalName"]])
+(OUT / "kanji3.json").write_text(json.dumps(records3, ensure_ascii=False, indent=1), encoding="utf-8")
+(OUT / "kanji3.js").write_text("window.KSL_G3=" + json.dumps(records3, ensure_ascii=False) + ";", encoding="utf-8")
+_txt3 = Path(__file__).resolve().parent.parent / "original" / "text3.json"
+if _txt3.exists():
+    _t3 = json.loads(_txt3.read_text(encoding="utf-8"))
+    (_txt3.parent / "text3.js").write_text("window.KSL_TEXT3=" + json.dumps(_t3, ensure_ascii=False) + ";", encoding="utf-8")
+print("wrote kanji3.json", (OUT / "kanji3.json").stat().st_size, "bytes")
