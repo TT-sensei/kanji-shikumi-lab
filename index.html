@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>漢字のしくみラボ（仮称）</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="appHeader">
+  <button id="btnHome" class="hbtn">🏠 ホーム</button>
+  <div class="htitle">漢字のしくみラボ<span class="hsub">（仮称）</span></div>
+  <button id="btnSound" class="hbtn">🔊 おと オン</button>
+</header>
+<main id="main">
+  <!-- トップ -->
+  <section id="view-top" class="view">
+    <div class="hero card">
+      <img class="hero-img" src="img/top-scene.png" alt="ナビキャラたちが国語の学習をしているところ">
+      <div class="hero-text">
+        <h1>漢字のしくみラボ</h1>
+        <p class="hero-lead">漢字を パーツに 分けて、組み立てて、<br>しくみから おぼえる 学習アプリ。</p>
+        <p class="badge-proto">プロトタイプ：1年生の 80字で おためし中</p>
+      </div>
+    </div>
+    <div class="grade-grid" id="gradeGrid"></div>
+    <div class="top-sub">
+      <button class="subbtn" id="btnParts">🧩 パーツずかん</button>
+      <button class="subbtn" id="btnSources">📖 出典・ライセンス</button>
+    </div>
+  </section>
+
+  <!-- 学年トップ -->
+  <section id="view-grade" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" data-back="top">← もどる</button>
+      <h2>1年生の かんじ <span class="cnt" id="gradeCount"></span></h2>
+    </div>
+    <div class="mode-grid" id="modeGrid"></div>
+    <div class="card nigate-card" id="nigateCard">
+      <h3>にがて な かんじ（くみたてで まちがえた字）</h3>
+      <div id="nigateList" class="chip-row"></div>
+    </div>
+    <div class="card">
+      <h3>ぜんぶの かんじ（タップで「ぶんかい」）</h3>
+      <div id="allKanjiGrid" class="kanji-grid"></div>
+    </div>
+  </section>
+
+  <!-- 漢字ピッカー -->
+  <section id="view-picker" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" data-back="grade">← もどる</button>
+      <h2 id="pickerTitle"></h2>
+    </div>
+    <div id="pickerGrid" class="kanji-grid big"></div>
+  </section>
+
+  <!-- プレイ画面 -->
+  <section id="view-play" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" id="btnPlayBack">← もどる</button>
+      <h2 id="playTitle"></h2>
+      <div id="playProgress" class="play-progress"></div>
+    </div>
+    <div class="play-wrap">
+      <div class="card stage-card" id="playStage"></div>
+      <div class="card panel-card" id="playPanel"></div>
+    </div>
+  </section>
+
+  <!-- パーツずかん -->
+  <section id="view-parts" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" data-back="top">← もどる</button>
+      <h2>パーツずかん</h2>
+    </div>
+    <div id="partsList" class="parts-list"></div>
+    <div class="card hidden" id="partDetail"></div>
+  </section>
+
+  <!-- 出典 -->
+  <section id="view-sources" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" data-back="top">← もどる</button>
+      <h2>出典・ライセンス</h2>
+    </div>
+    <div class="card sources">
+      <h3>このアプリの データについて</h3>
+      <p>漢字の 分解と 字形には <strong>KanjiVG</strong>（KanjiVG project）を、部首番号と 画数には <strong>KANJIDIC2</strong>（EDRDG）を 使っています。どちらも Creative Commons 表示—継承（CC BY-SA）ライセンスで 公開されている データです。</p>
+      <ul>
+        <li>KanjiVG — <a href="https://kanjivg.tagaini.net" target="_blank" rel="noopener">kanjivg.tagaini.net</a>（CC BY-SA 3.0）</li>
+        <li>KANJIDIC2 — <a href="https://www.edrdg.org/wiki/index.php/KANJIDIC_Project" target="_blank" rel="noopener">EDRDG KANJIDIC Project</a>（CC BY-SA 4.0）</li>
+      </ul>
+      <p>学年・読み・例文は、TT-sensei の アプリ「かんじマスター」の 自作データを 使っています。唱え方と 説明は、このアプリのために 作った 独自の ものです。</p>
+      <p>KanjiVG の 分解は、そのまま「正解」として 出している わけでは ありません。小学生が 漢字の しくみを 分かるように、教材として 決めた 分け方を 固定で 出しています。</p>
+    </div>
+  </section>
+</main>
+<div id="fx" aria-hidden="true"></div>
+<script src="data/kanji1.js"></script>
+<script src="original/text1.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
