@@ -18,7 +18,7 @@ KVG = "{http://kanjivg.tagaini.net}"
 Path("/tmp/kanjiapp").mkdir(exist_ok=True)
 Path("/tmp/kvg").mkdir(exist_ok=True)
 
-for fn in ("kanji-data.js", "kanjiExampleData_1.js"):
+for fn in ("kanji-data.js", "kanjiExampleData_1.js", "kanjiExampleData_2.js"):
     fp = Path("/tmp/kanjiapp") / fn
     if not fp.exists():
         urllib.request.urlretrieve(f"https://raw.githubusercontent.com/TT-sensei/kanjiapp/main/{fn}", fp)
@@ -39,18 +39,33 @@ for entry in packed.split("|"):
     readings[k] = {"on": on, "kun": kun}
     order.append(k)
 
-exsrc = Path("/tmp/kanjiapp/kanjiExampleData_1.js").read_text(encoding="utf-8")
-examples = {}
-for km in re.finditer(r'"(.?)":\s*\[(.*?)\]', exsrc, re.S):
-    items = re.findall(r'sentence:\s*"([^"]+)",\s*reading:\s*"([^"]+)",\s*level:\s*(\d+)', km.group(2))
-    if items:
-        examples[km.group(1)] = [{"s": s, "r": r, "l": int(l)} for s, r, l in items]
+def parse_examples(fn):
+    ex = {}
+    t = Path("/tmp/kanjiapp", fn).read_text(encoding="utf-8")
+    for km in re.finditer(r'"(.?)":\s*\[(.*?)\]', t, re.S):
+        items = re.findall(r'sentence:\s*"([^"]+)",\s*reading:\s*"([^"]+)",\s*level:\s*(\d+)', km.group(2))
+        if items:
+            ex[km.group(1)] = [{"s": a, "r": b, "l": int(c)} for a, b, c in items]
+    return ex
+examples = parse_examples("kanjiExampleData_1.js")
+packed2 = re.search(r'2:"([^"]+)"', src).group(1)
+readings2, order2 = {}, []
+for entry in packed2.split("|"):
+    k, r = entry.split(":", 1)
+    on, kun = [], []
+    for tok in r.split(","):
+        tok = tok.strip()
+        if tok:
+            (on if re.match(r'^[ァ-ヶー]', tok) else kun).append(tok)
+    readings2[k] = {"on": on, "kun": kun}
+    order2.append(k)
+examples2 = parse_examples("kanjiExampleData_2.js")
 
 kd = gzip.open(kd_gz, "rt", encoding="utf-8").read()
 info = {}
 for block in re.findall(r"<character>.*?</character>", kd, re.S):
     lit = re.search(r"<literal>(.)</literal>", block).group(1)
-    if lit in readings:
+    if lit in readings or lit in readings2:
         rad = re.search(r'<rad_value rad_type="classical">(\d+)</rad_value>', block)
         st = re.search(r"<stroke_count>(\d+)</stroke_count>", block)
         info[lit] = {"radicalNo": int(rad.group(1)) if rad else None,
@@ -238,16 +253,35 @@ RADICAL_NAMES = {1:"いち",2:"ぼう",5:"おつ",7:"に",9:"ひと",10:"にん�
     64:"て",67:"ぶん",72:"ひ",74:"つき",75:"き",77:"とめる",84:"きがまえ",85:"みず",86:"ひ",
     94:"いぬ",96:"たま",100:"せい",102:"た",106:"しろ",109:"め",112:"いし",116:"あな",117:"たつ",
     118:"たけ",120:"いと",128:"みみ",140:"くさ",142:"むし",147:"みる",154:"かい",155:"あか",
-    157:"あし",159:"くるま",167:"かね",173:"あめ",174:"あお",180:"おと"}
+    157:"あし",159:"くるま",167:"かね",173:"あめ",174:"あお",180:"おと",
+    3:"てん",8:"なべぶた",15:"にすい",18:"かたな",21:"さじ",27:"がんだれ",29:"また",33:"さむらい",
+    35:"ふゆがしら",40:"うかんむり",41:"すん",50:"はば",53:"まだれ",57:"ゆみ",58:"けいがしら",
+    59:"さんづくり",60:"ぎょうにんべん",61:"こころ",63:"とびらのと",66:"ぼくにょう",69:"おの",
+    70:"ほう",73:"いわく",76:"あくび",80:"はは",82:"け",88:"ちち",93:"うし",101:"もちいる",
+    111:"や",113:"しめす",115:"のぎ",119:"こめ",124:"はね",125:"おい",130:"にく",132:"みずから",
+    137:"ふね",139:"いろ",144:"ぎょうがまえ",146:"にし",148:"つの",149:"ごん",150:"たに",
+    156:"そうにょう",162:"しんにょう",166:"さと",168:"ながい",169:"もん",181:"おおがい",
+    182:"かぜ",184:"しょく",185:"くび",187:"うま",189:"たか",195:"うお",196:"とり",
+    199:"むぎ",201:"き",203:"くろ"}
 VARIANT_NAMES = {"亻":"にんべん","氵":"さんずい","扌":"てへん","艹":"くさかんむり","宀":"うかんむり",
-    "冖":"わかんむり","灬":"れっか","阝":"こざとへん"}
+    "冖":"わかんむり","灬":"れっか","阝":"こざとへん","刂":"りっとう","忄":"りっしんべん",
+    "礻":"ねへん","ネ":"ねへん"}
 POS_TYPE = {"left":"へん","right":"つくり","top":"かんむり","bottom":"あし","kamae":"かまえ"}
 RADICAL_ELEMENT = {1:"一",2:"丨",5:"乙",7:"二",9:"人",10:"儿",11:"入",12:"八",13:"冂",17:"凵",19:"力",
     24:"十",30:"口",31:"囗",32:"土",36:"夕",37:"大",38:"女",39:"子",42:"小",46:"山",47:"川",48:"工",
     51:"干",64:"手",67:"文",72:"日",74:"月",75:"木",77:"止",84:"气",85:"水",86:"火",94:"犬",96:"玉",
     100:"生",102:"田",106:"白",109:"目",112:"石",116:"穴",117:"立",118:"竹",120:"糸",128:"耳",
-    140:"艹",142:"虫",147:"見",154:"貝",155:"赤",157:"足",159:"車",167:"金",173:"雨",174:"青",180:"音"}
-RADICAL_VARIANTS = {9:["亻","人"],85:["氵","水"],64:["扌","手"],96:["玉","王"],140:["艹"],147:["見"]}
+    140:"艹",142:"虫",147:"見",154:"貝",155:"赤",157:"足",159:"車",167:"金",173:"雨",174:"青",180:"音",
+    3:"丶",8:"亠",15:"冫",18:"刀",21:"匕",27:"厂",29:"又",33:"士",35:"夂",40:"宀",41:"寸",50:"巾",
+    53:"广",57:"弓",58:"彐",59:"彡",60:"彳",61:"心",63:"戸",66:"攵",69:"斤",70:"方",73:"曰",76:"欠",
+    80:"毋",82:"毛",88:"父",93:"牛",101:"用",111:"矢",113:"示",115:"禾",119:"米",124:"羽",125:"老",
+    130:"肉",132:"自",137:"舟",139:"色",144:"行",146:"襾",148:"角",149:"言",150:"谷",156:"走",
+    162:"辶",166:"里",168:"長",169:"門",181:"頁",182:"風",184:"食",185:"首",187:"馬",189:"高",
+    195:"魚",196:"鳥",199:"麦",201:"黄",203:"黒"}
+RADICAL_VARIANTS = {9:["亻","人"],85:["氵","水"],64:["扌","手"],96:["玉","王"],140:["艹"],147:["見"],
+    18:["刂","刀"],40:["宀"],61:["忄","心"],80:["毋","母"],113:["礻","示","ネ"],125:["耂","老"],
+    130:["月","肉"],149:["言"],156:["走"],162:["辶"],184:["飠","食"],201:["黄"],203:["黒"],
+    86:["火","灬"]}
 
 def derive_structure(comps):
     if len(comps) <= 1:
@@ -324,3 +358,236 @@ if _txt.exists():
     _t = json.loads(_txt.read_text(encoding="utf-8"))
     (_txt.parent / "text1.js").write_text("window.KSL_TEXT=" + json.dumps(_t, ensure_ascii=False) + ";", encoding="utf-8")
     print("wrote kanji1.js and original/text1.js")
+
+# ================= 2年生 =================
+# ユーザーの唱え歌データ（部品リスト）を正として、KanjiVG の分解ツリーと照合する。
+_draft = (Path(__file__).resolve().parent.parent / "original" / "chants2-user-draft.js").read_text(encoding="utf-8")
+USER2 = {}
+for _m in re.finditer(r'\["(.)",\[(.*?)\],"([^"]+)"\]', _draft):
+    _ps = [x.strip().strip('"') for x in _m.group(2).split(",") if x.strip()]
+    USER2[_m.group(1)] = {"parts": _ps, "chant": _m.group(3)}
+
+ALIAS2 = {"イ": ["亻"], "ル": ["儿"], "ハ": ["八", "丷"], "メ": ["乂"], "ノ": ["丿"], "ト": ["卜"],
+          "ツ": ["⺍", "丷", "⺌"], "ナ": ["丆", "𠂇"], "ム": ["厶"], "リ": ["刂"], "ミ": ["彡"], "ソ": ["丷", "八"],
+          "ヨ": ["彐", "⺕"], "ネ": ["礻", "示"], "ク": ["勹", "𠂊"], "ヒ": ["匕"], "ラ": [], "マ": [],
+          "辶": ["⻌", "辶"], "易": ["昜", "易"], "廿": ["龷", "廿"], "丷": ["八", "丷"], "止": ["龰", "止"]}
+
+def parse_node(g):
+    node = {"el": g.get(KVG + "element"), "pos": g.get(KVG + "position") or "",
+            "rad": bool(g.get(KVG + "radical")), "items": []}
+    for child in g:
+        if child.tag == SVG + "path":
+            node["items"].append(("p", child.get("d")))
+        elif child.tag == SVG + "g":
+            node["items"].append(("g", parse_node(child)))
+    return node
+
+def node_flat(node, counter):
+    """(画インデックス, d) のリストを document 順に返す"""
+    out = []
+    for kind, v in node["items"]:
+        if kind == "p":
+            out.append((counter[0], v)); counter[0] += 1
+        else:
+            out.extend(node_flat(v, counter))
+    return out
+
+def collect_nodes(node, acc):
+    for kind, v in node["items"]:
+        if kind == "g":
+            acc.append(v)
+            collect_nodes(v, acc)
+
+def annotate_flat(root):
+    """全ノードに全体通しの画インデックス付き _flat を付ける"""
+    counter = [0]
+    def rec(node):
+        flat = []
+        for kind, v in node["items"]:
+            if kind == "p":
+                flat.append((counter[0], v)); counter[0] += 1
+            else:
+                flat.extend(rec(v))
+        node["_flat"] = flat
+        return flat
+    rec(root)
+    return counter[0]
+
+def align_parts(root, parts):
+    """ユーザーの部品リストに一致するツリーノードの分割を探す。見つからなければ None。
+    候補の優先順: 内部名が合うノード → 同名ノードの合体（囲みの枠など） → 名なしグループ → 浮いた画のまとまり。"""
+    total = annotate_flat(root)
+    nodes = []
+    collect_nodes(root, nodes)
+    tier1, tier3 = [], []
+    by_el = {}
+    for n in nodes:
+        flat = n["_flat"]
+        if not flat:
+            continue
+        if n["el"]:
+            tier1.append({"idxs": [i for i, _ in flat], "d": [d for _, d in flat], "el": n["el"], "pos": n["pos"]})
+            by_el.setdefault(n["el"], []).append(n)
+        else:
+            tier3.append({"idxs": [i for i, _ in flat], "d": [d for _, d in flat], "el": None, "pos": n["pos"]})
+    tier2 = []
+    for el, ns_ in by_el.items():
+        if len(ns_) >= 2:
+            pairs = sorted([p for n in ns_ for p in n["_flat"]])
+            tier2.append({"idxs": [i for i, _ in pairs], "d": [d for _, d in pairs], "el": el, "pos": ns_[0]["pos"]})
+    # 浮いた画（root・名なしグループ直下の画）の最大ラン
+    tier4 = []
+    def loose_runs(node, is_root=False):
+        run = []
+        for kind, v in node["items"]:
+            if kind == "p":
+                run.append(v)
+            else:
+                if run:
+                    tier4.append(run); run = []
+                if v["el"] is None:
+                    loose_runs(v)
+        if run:
+            tier4.append(run)
+    loose_runs(root, True)
+    idx_of = {}
+    for i, d in root["_flat"]:
+        idx_of[d] = i
+    tier4 = [{"idxs": [idx_of[d] for d in run], "d": list(run), "el": None, "pos": ""} for run in tier4 if run]
+    cands = tier1 + tier2 + tier3 + tier4
+    def els_for(label):
+        return set(ALIAS2.get(label, [])) | {label}
+    def search(pi, used, min_start, strict):
+        if pi == len(parts):
+            return [] if len(used) == total else None
+        label = parts[pi]
+        els = els_for(label)
+        for c in cands:
+            if c["el"] is not None and c["el"] not in els:
+                continue
+            st = set(c["idxs"])
+            if st & used:
+                continue
+            if strict and min(c["idxs"]) < min_start:
+                continue
+            rest = search(pi + 1, used | st, min(c["idxs"]), strict)
+            if rest is not None:
+                return [c] + rest
+        return None
+    return search(0, frozenset(), -1, True) or search(0, frozenset(), -1, False)
+
+def radical_stroke_idxs(root):
+    counter = [0]
+    idx_of = {}
+    def walk(node):
+        s = set()
+        for kind, v in node["items"]:
+            if kind == "p":
+                s.add(counter[0]); counter[0] += 1
+            else:
+                s |= walk(v)
+        if node["rad"]:
+            idx_of[id(node)] = s
+        return s
+    walk(root)
+    out = set()
+    for v in idx_of.values():
+        out |= v
+    return out
+
+STRUCT_OVERRIDES2 = {"近": "enclose", "週": "enclose", "道": "enclose", "通": "enclose", "遠": "enclose"}
+# 画単位の分割（2年生）: 自動照合で決まらない字を、画の形を実測して手で決めたもの。
+# (内部名, 表示名, 位置, 画インデックス群)
+STROKE_SPLITS2 = {
+    "言": [("亠","亠","top",[0,1]), ("二","二","",[2,3]), ("口","口","bottom",[4,5,6])],
+    "用": [("冂","冂","kamae",[0,1,2]), ("十","十","",[3,4])],
+    "食": [("人","人","top",[0,1]), ("良","良","bottom",[2,3,4,5,6,7,8])],
+    "肉": [("冂","冂","kamae",[0,1]), ("人","人","",[2,3]), ("人","人","",[4,5])],
+    "首": [("丷","丷","top",[0,1]), ("一","一","",[2]), ("自","自","bottom",[3,4,5,6,7,8])],
+    "毎": [("丿","ノ","top",[0]), ("母","母","bottom",[1,2,3,4,5])],
+    "夜": [("亠","亠","top",[0,1]), ("亻","イ","",[2,3]), ("夕","夕","bottom",[4,5,6,7])],
+    "来": [("木","木","",[0,3,4,5,6]), ("丷","ソ","top",[1,2])],
+    "里": [("田","田","top",[0,1,2,3,4]), ("土","土","bottom",[5,6])],
+    "半": [("丷","丷","top",[0,1]), ("二","二","",[2,3]), ("丨","丨","",[4])],
+    "弟": [("丷","ソ","top",[0,1]), ("弓","弓","",[2,3,4,5]), ("丿","ノ","bottom",[6])],
+    "帰": [("刂","リ","left",[0,1]), ("彐","ヨ","",[2,3,4,5,6]), ("巾","巾","right",[7,8,9])],
+    "楽": [("白","白","top",[0,1,2,3,4]), ("幺","幺","",[5,6,7,8]), ("木","木","bottom",[9,10,11,12])],
+    "交": [("六","六","top",[0,1,2,3]), ("乂","メ","bottom",[4,5])],
+    "午": [("丿","ノ","top",[0]), ("干","十","bottom",[1,2,3])],
+    "南": [("十","十","top",[0,1]), ("冂","冂","kamae",[2,3]), ("丷","ソ","",[4,5]), ("干","十","bottom",[6,7,8])],
+}
+records2, unmatched2 = [], []
+for ch in order2:
+    tree = ET.parse(fetch_svg(ch))
+    sp = next(g for g in tree.getroot().iter(SVG + "g") if (g.get("id") or "").startswith("kvg:StrokePaths"))
+    root = parse_node(list(sp)[0])
+    uparts = USER2[ch]["parts"]
+    rad_idxs = radical_stroke_idxs(root)
+    counter = [0]
+    all_flat = node_flat(root, counter)
+    idx_of_d = {}
+    for i, d in all_flat:
+        idx_of_d.setdefault(d, i)
+    if ch in STROKE_SPLITS2:
+        comps = [{"el": el, "label": lab, "pos": pos, "rad": False,
+                  "d": [all_flat[i][1] for i in idxs], "_idxs": list(idxs)}
+                 for el, lab, pos, idxs in STROKE_SPLITS2[ch]]
+    elif not uparts:
+        comps = [{"el": ch, "label": ch, "pos": "", "rad": False, "d": [d for _, d in all_flat], "_idxs": [i for i, _ in all_flat]}]
+    else:
+        got = align_parts(root, uparts)
+        if got is None:
+            unmatched2.append(ch)
+            comps = merge_parts(raw_components(list(sp)[0], ch), ch)
+            for c in comps:
+                c.pop("_grp", None); c.pop("part", None); c.pop("_bare", None)
+                c.pop("_noel_grp", None); c.pop("_noel_pos", None)
+                c["label"] = c["el"]
+                c["_idxs"] = [idx_of_d.get(d, -1) for d in c["d"]]
+        else:
+            comps = [{"el": c["el"], "label": lab, "pos": c["pos"], "rad": False,
+                      "d": c["d"], "_idxs": c["idxs"]} for c, lab in zip(got, uparts)]
+    rno = info[ch]["radicalNo"]
+    targets = set(RADICAL_VARIANTS.get(rno, [])) | {RADICAL_ELEMENT.get(rno, "")}
+    rad_comp = None
+    for c in comps:
+        if c["el"] in targets or (rad_idxs and set(c["_idxs"]) == rad_idxs):
+            rad_comp = c
+            break
+    for c in comps:
+        c["rad"] = (c is rad_comp)
+        c.pop("_idxs", None)
+    if RADICAL_ELEMENT.get(rno) == ch or (len(comps) == 1 and rad_comp is not None):
+        radical_state = "whole"
+    elif rad_comp is not None:
+        radical_state = "part"
+    else:
+        radical_state = "name"
+    rname = RADICAL_NAMES.get(rno, "")
+    if rad_comp and rad_comp["el"] in VARIANT_NAMES:
+        rname = VARIANT_NAMES[rad_comp["el"]]
+    if rad_comp is None:
+        ptype = "そのほか"
+    elif rad_comp["pos"] == "bottom" and rad_comp["el"] not in ("儿", "龰", "灬", "心"):
+        ptype = "そのほか"
+    else:
+        ptype = POS_TYPE.get(rad_comp["pos"], "そのほか")
+    records2.append({"kanji": ch, "grade": 2, "on": readings2[ch]["on"], "kun": readings2[ch]["kun"],
+        "strokes": info[ch]["strokes"], "radicalNo": rno, "radicalName": rname,
+        "radicalPosType": ptype, "radicalState": radical_state,
+        "structure": STRUCT_OVERRIDES2.get(ch, derive_structure(comps)),
+        "components": [{"el": c["el"], "label": c.get("label", c["el"]), "pos": c["pos"], "rad": bool(c["rad"]), "d": c["d"]} for c in comps],
+        "examples": examples2.get(ch, [])})
+
+print("G2 structures:", Counter(r["structure"] for r in records2))
+print("G2 comp counts:", Counter(len(r["components"]) for r in records2))
+print("G2 radical states:", Counter(r["radicalState"] for r in records2))
+print("G2 unmatched (fallback to KanjiVG top-level):", len(unmatched2), unmatched2)
+print("G2 empty radicalName:", [r["kanji"] for r in records2 if not r["radicalName"]])
+(OUT / "kanji2.json").write_text(json.dumps(records2, ensure_ascii=False, indent=1), encoding="utf-8")
+(OUT / "kanji2.js").write_text("window.KSL_G2=" + json.dumps(records2, ensure_ascii=False) + ";", encoding="utf-8")
+_txt2 = Path(__file__).resolve().parent.parent / "original" / "text2.json"
+if _txt2.exists():
+    _t2 = json.loads(_txt2.read_text(encoding="utf-8"))
+    (_txt2.parent / "text2.js").write_text("window.KSL_TEXT2=" + json.dumps(_t2, ensure_ascii=False) + ";", encoding="utf-8")
+print("wrote kanji2.json", (OUT / "kanji2.json").stat().st_size, "bytes")

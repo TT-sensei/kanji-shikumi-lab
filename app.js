@@ -1,10 +1,13 @@
 "use strict";
-/* 漢字のしくみラボ（仮称） プロトタイプ: 1年生80字 */
-const DATA = window.KSL_G1 || [];
-const TEXT = window.KSL_TEXT || {};
+/* 漢字のしくみラボ（仮称） プロトタイプ: 1・2年生 240字 */
+const GRADE_DATA = {1: window.KSL_G1 || [], 2: window.KSL_G2 || []};
+const GRADE_TEXT = {1: window.KSL_TEXT || {}, 2: window.KSL_TEXT2 || {}};
+let curGrade = 1;
+let DATA = GRADE_DATA[1];
+let TEXT = GRADE_TEXT[1];
 const LS_KEY = "kanjiShikumiLab.v1";
 
-const POS_JA = {left:"ひだり", right:"みぎ", top:"うえ", bottom:"した", kamae:"かまえ", "":""};
+const POS_JA = {left:"ひだり", right:"みぎ", top:"うえ", bottom:"した", kamae:"かまえ", nyo:"かまえ", nyoc:"かまえ", tare:"かまえ", tarec:"かまえ", kamaec:"かまえ", middle:"まんなか", "":""};
 const STRUCT_JA = {horizontal:"左と 右", vertical:"上と 下", enclose:"囲み・かまえ", single:"一つの 形", parts:"組み合わせ"};
 const STRUCT_ORDER = ["horizontal","vertical","enclose","single","parts"];
 const COMP_COLORS = ["#e2574c","#3b7dd8","#3aa655","#e8912d","#8b5cf6","#0e9594","#d6336c","#5a7247"];
@@ -28,7 +31,7 @@ function setSt(kanji, key){
   if(!store.status[kanji]) store.status[kanji] = {};
   store.status[kanji][key] = 1; saveStore();
 }
-function masteredCount(){ return DATA.filter(r => st(r.kanji).k).length; }
+function masteredCount(data){ return (data || DATA).filter(r => st(r.kanji).k).length; }
 function modeCount(mode){ const k = MODE_KEY[mode]; return DATA.filter(r => st(r.kanji)[k]).length; }
 
 /* ---------- 音 ---------- */
@@ -171,15 +174,29 @@ function formulaOf(rec){
 /* ---------- トップ ---------- */
 function renderTop(){
   const g = document.getElementById("gradeGrid");
-  const mc = masteredCount();
-  let html = `<button class="grade-card" id="grade1Card">1年生<span class="gstars">くみたて マスター ★ ${mc} / ${DATA.length}</span></button>`;
-  for(let gr = 2; gr <= 6; gr++) html += `<button class="grade-card disabled" disabled>${gr}年生<span class="soon">じゅんびちゅう</span></button>`;
+  let html = "";
+  for(let gr = 1; gr <= 6; gr++){
+    const d = GRADE_DATA[gr];
+    if(d && d.length){
+      html += `<button class="grade-card" data-grade="${gr}">${gr}年生<span class="gstars">くみたて マスター ★ ${masteredCount(d)} / ${d.length}</span></button>`;
+    } else {
+      html += `<button class="grade-card disabled" disabled>${gr}年生<span class="soon">じゅんびちゅう</span></button>`;
+    }
+  }
   g.innerHTML = html;
-  document.getElementById("grade1Card").addEventListener("click", () => { sndTap(); renderGrade(); showView("view-grade"); });
+  g.querySelectorAll(".grade-card[data-grade]").forEach(b => b.addEventListener("click", () => {
+    sndTap();
+    curGrade = Number(b.dataset.grade);
+    DATA = GRADE_DATA[curGrade];
+    TEXT = GRADE_TEXT[curGrade];
+    renderGrade();
+    showView("view-grade");
+  }));
 }
 
 /* ---------- 学年トップ ---------- */
 function renderGrade(){
+  document.getElementById("gradeName").textContent = `${curGrade}年生`;
   document.getElementById("gradeCount").textContent = `（${DATA.length}字）`;
   const mg = document.getElementById("modeGrid");
   mg.innerHTML = Object.keys(MODES).map(m => {

@@ -20,7 +20,7 @@
       <div class="hero-text">
         <h1>漢字のしくみラボ</h1>
         <p class="hero-lead">漢字を パーツに 分けて、組み立てて、<br>しくみから おぼえる 学習アプリ。</p>
-        <p class="badge-proto">プロトタイプ：1年生の 80字で おためし中</p>
+        <p class="badge-proto">プロトタイプ：1・2年生の 240字で おためし中</p>
       </div>
     </div>
     <div class="grade-grid" id="gradeGrid"></div>
@@ -34,7 +34,7 @@
   <section id="view-grade" class="view hidden">
     <div class="view-head">
       <button class="backbtn" data-back="top">← もどる</button>
-      <h2>1年生の かんじ <span class="cnt" id="gradeCount"></span></h2>
+      <h2><span id="gradeName">1年生</span>の かんじ <span class="cnt" id="gradeCount"></span></h2>
     </div>
     <div class="mode-grid" id="modeGrid"></div>
     <div class="card nigate-card" id="nigateCard">
@@ -99,7 +99,9 @@
 </main>
 <div id="fx" aria-hidden="true"></div>
 <script src="data/kanji1.js"></script>
+<script src="data/kanji2.js"></script>
 <script src="original/text1.js"></script>
+<script src="original/text2.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
