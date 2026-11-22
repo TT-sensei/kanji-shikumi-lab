@@ -116,7 +116,11 @@ const GUIDE_OPEN = {
 function pathsOf(comp){ return comp.d.map(d => `<path d="${d}"/>`).join(""); }
 function svgKanji(rec, opts){
   opts = opts || {};
-  const groups = rec.components.map((c, i) => {
+  const order = rec.components.map((c, i) => i).sort((a, b2) => {
+    const ba = bboxOf(rec.components[a]), bb = bboxOf(rec.components[b2]);
+    return (bb.w * bb.h) - (ba.w * ba.h);
+  });
+  const groups = order.map(i => { const c = rec.components[i];
     let stroke = "#26304d", cls = "comp", extra = "";
     if(opts.colored) stroke = COMP_COLORS[i % COMP_COLORS.length];
     if(opts.radical && (c.rad || opts.radicalAll)) stroke = "#e2574c";
@@ -445,6 +449,8 @@ function playKumitate(rec, opts){
     <div class="ib-sub">パーツを タップ → 置く 場所を タップ</div>`;
   function renderSlots(){
     const sl = document.getElementById("slots");
+    const areas = rec.components.map(c => { const b = bboxOf(c); return b.w * b.h; });
+    const zOf = i => 1 + areas.filter(a => a > areas[i]).length;
     sl.innerHTML = rec.components.map((c, i) => {
       const b = bboxOf(c);
       const cx = b.x + b.w / 2, cy = b.y + b.h / 2;
@@ -454,7 +460,7 @@ function playKumitate(rec, opts){
       const top = Math.min(Math.max(cy / 109 * 100 - hPct / 2, 0), 100 - hPct);
       const p = placed[i];
       const label = c.pos ? POS_JA[c.pos] : posLabelFromCenter(cx, cy);
-      return `<button class="slot2 ${p ? "filled" : ""}" data-slot="${i}" style="left:${left}%;top:${top}%;width:${wPct}%;height:${hPct}%">
+      return `<button class="slot2 ${p ? "filled" : ""}" data-slot="${i}" style="left:${left}%;top:${top}%;width:${wPct}%;height:${hPct}%;z-index:${zOf(i)}">
         <span class="slot-pos">${label}</span>
         ${p ? svgPart(p, COMP_COLORS[i % COMP_COLORS.length]) : ""}</button>`;
     }).join("");
