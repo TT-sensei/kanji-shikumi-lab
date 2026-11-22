@@ -182,3 +182,6 @@ svg .comp.dim{opacity:.18;}
   .kanji-grid{grid-template-columns:repeat(5,1fr);}
   .kanji-grid.big{grid-template-columns:repeat(4,1fr);}
 }
+.linkbtn{display:inline-block; margin-top:8px; padding:8px 16px; font-size:16px; font-weight:700;
+  color:#fff; background:var(--accent, #e8912d); border:none; border-radius:999px; cursor:pointer;}
+.linkbtn:active{transform:scale(.97);}

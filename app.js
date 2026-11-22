@@ -167,6 +167,24 @@ function explOf(rec){
   const t = TEXT[rec.kanji];
   return (t && t.expl) ? t.expl : "";
 }
+function partLinkTarget(c, selfKanji){
+  // 部品そのものが 学習する漢字（1・2年生）なら、その字へのリンクを返す
+  for(const cand of [c.el, labelOf(c)]){
+    if(!cand || cand === selfKanji) continue;
+    for(const gr of [1, 2]){
+      if(GRADE_DATA[gr].some(r => r.kanji === cand)) return {kanji: cand, grade: gr};
+    }
+  }
+  return null;
+}
+function gotoKanji(target){
+  if(target.grade !== curGrade){
+    curGrade = target.grade;
+    DATA = GRADE_DATA[curGrade];
+    TEXT = GRADE_TEXT[curGrade];
+  }
+  startPlay("bunkai", target.kanji);
+}
 function formulaOf(rec){
   return rec.components.map(c => labelOf(c)).join(" ＋ ") + " ＝ " + rec.kanji;
 }
@@ -287,7 +305,9 @@ function playBunkai(rec){
       const c = rec.components[sel];
       const pos = c.pos ? `場所：${POS_JA[c.pos]}` : "場所：全体";
       const rad = c.rad ? `<br>⭐ これは 部首の パーツ（${esc(rec.radicalName)}）` : "";
-      info = `<div class="info-box"><div class="ib-title">パーツ ${sel + 1}</div><div class="ib-main">「${esc(labelOf(c))}」</div><div class="ib-sub">${pos}${rad}</div></div>`;
+      const lt = partLinkTarget(c, rec.kanji);
+      const link = lt ? `<button class="linkbtn" id="btnPartLink" data-k="${esc(lt.kanji)}" data-g="${lt.grade}">「${esc(lt.kanji)}」の ページを 見る →</button>` : "";
+      info = `<div class="info-box"><div class="ib-title">パーツ ${sel + 1}</div><div class="ib-main">「${esc(labelOf(c))}」</div><div class="ib-sub">${pos}${rad}</div>${link}</div>`;
     }
     const ex = exampleOf(rec);
     const radComp = rec.components.find(c => c.rad);
@@ -314,6 +334,7 @@ function playBunkai(rec){
         playBunkaiSelect(j);
       }));
       panel.innerHTML = panelHTML(i);
+      wirePartLink();
       afterTap();
     });
   });
@@ -322,7 +343,12 @@ function playBunkai(rec){
       g2.classList.toggle("dim", +g2.dataset.i !== i);
     });
     panel.innerHTML = panelHTML(i);
+    wirePartLink();
     afterTap();
+  }
+  function wirePartLink(){
+    const b = document.getElementById("btnPartLink");
+    if(b) b.addEventListener("click", () => { sndTap(); gotoKanji({kanji: b.dataset.k, grade: Number(b.dataset.g)}); });
   }
   function afterTap(){
     if(tapped.size >= rec.components.length && !st(rec.kanji).b){
