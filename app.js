@@ -7,7 +7,7 @@ let DATA = GRADE_DATA[1];
 let TEXT = GRADE_TEXT[1];
 const LS_KEY = "kanjiShikumiLab.v1";
 
-const POS_JA = {left:"ひだり", right:"みぎ", top:"うえ", bottom:"した", kamae:"かまえ", nyo:"かまえ", nyoc:"かまえ", tare:"かまえ", tarec:"かまえ", kamaec:"かまえ", middle:"まんなか", "":""};
+const POS_JA = {left:"ひだり", right:"みぎ", top:"うえ", bottom:"した", kamae:"かまえ", nyo:"しんにょう", nyoc:"にょうの なか", tare:"たれ", tarec:"たれの した", kamaec:"かまえの なか", middle:"まんなか", "":""};
 const STRUCT_JA = {horizontal:"左と 右", vertical:"上と 下", enclose:"囲み・かまえ", single:"一つの 形", parts:"組み合わせ"};
 const STRUCT_ORDER = ["horizontal","vertical","enclose","single","parts"];
 const COMP_COLORS = ["#e2574c","#3b7dd8","#3aa655","#e8912d","#8b5cf6","#0e9594","#d6336c","#5a7247"];
@@ -33,6 +33,10 @@ function setSt(kanji, key){
   store.status[kanji][key] = 1; saveStore();
 }
 function masteredCount(data){ return (data || DATA).filter(r => st(r.kanji).k).length; }
+function learnedCount(data){ return (data || DATA).filter(r => st(r.kanji).t).length; }
+function clearSt(kanji, key){
+  if(store.status[kanji] && store.status[kanji][key]){ store.status[kanji][key] = 0; saveStore(); }
+}
 function modeCount(mode){ const k = MODE_KEY[mode]; return DATA.filter(r => st(r.kanji)[k]).length; }
 
 /* ---------- 音（sounds-recipe-。読み込めなくても学習は続ける） ---------- */
@@ -250,7 +254,7 @@ function renderTop(){
   for(let gr = 1; gr <= 6; gr++){
     const d = GRADE_DATA[gr];
     if(d && d.length){
-      html += `<button class="grade-card" data-grade="${gr}">${gr}年生<span class="gstars">くみたて マスター ★ ${masteredCount(d)} / ${d.length}</span></button>`;
+      html += `<button class="grade-card" data-grade="${gr}">${gr}年生<span class="gstars">しゅうとく ★ ${learnedCount(d)} / ${d.length}</span></button>`;
     } else {
       html += `<button class="grade-card disabled" disabled>${gr}年生<span class="soon">じゅんびちゅう</span></button>`;
     }
@@ -285,8 +289,9 @@ function renderGrade(){
     else renderPicker(b.dataset.mode);
   }));
   const nl = document.getElementById("nigateList");
-  if(store.mistakes.length){
-    nl.innerHTML = store.mistakes.map(k => `<button class="chip" data-k="${k}">${k}</button>`).join("");
+  const myMistakes = store.mistakes.filter(k => DATA.some(r => r.kanji === k));
+  if(myMistakes.length){
+    nl.innerHTML = myMistakes.map(k => `<button class="chip" data-k="${k}">${k}</button>`).join("");
     nl.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => startPlay("kumitate", c.dataset.k)));
   } else {
     nl.innerHTML = `<span class="chip-none">まだ ありません。くみたてで まちがえると ここに たまります。</span>`;
@@ -301,7 +306,7 @@ function marksHTML(rec){
   return `<span class="marks">${dot(s.b)}${dot(s.k)}${dot(s.s)}${dot(s.r)}</span>`;
 }
 function kanjiBtnHTML(rec){
-  return `<button class="kbtn ${st(rec.kanji).k ? "mastered" : ""}" data-k="${rec.kanji}">${rec.kanji}${marksHTML(rec)}</button>`;
+  return `<button class="kbtn ${st(rec.kanji).t ? "mastered" : ""}" data-k="${rec.kanji}">${rec.kanji}${marksHTML(rec)}</button>`;
 }
 
 /* ---------- ピッカー ---------- */
@@ -496,8 +501,8 @@ function playKumitate(rec, opts){
     if(allOk){
       setSt(rec.kanji, "k");
       store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
-      sndGood(); celebrate(); setGuide("celeb", `「${rec.kanji}」が できた！ マスターだね。`);
-      stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="result-good">「${rec.kanji}」が できた！ マスター ★</div>`;
+      sndGood(); celebrate(); setGuide("celeb", `「${rec.kanji}」が できた！ クリアだね。テストで 一回で できたら しゅうとくだよ。`);
+      stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="result-good">「${rec.kanji}」が できた！ クリア</div>`;
       panel.innerHTML = chantBox(rec, true) + finishPanel("");
       wireFinish();
       document.getElementById("playProgress").textContent = `くみたて ${modeCount("kumitate")} / ${DATA.length}`;
@@ -572,21 +577,17 @@ function playBushu(rec){
 /* ---------- テスト（かんじマスターと同じ4グループ分け） ---------- */
 const TEST = {active:false, group:0, items:[], idx:0, firstTry:0, wrong:[]};
 const GROUP_MARKS = ["①","②","③","④"];
-function groupItems(g){
-  const start = Math.floor((g - 1) * DATA.length / 4);
-  const end = Math.floor(g * DATA.length / 4);
-  return DATA.slice(start, end);
-}
+function groupItems(g){ return DATA.filter(r => r.group === g); }
 function renderTestGroups(){
   const grid = document.getElementById("testGroupGrid");
   grid.innerHTML = [1,2,3,4].map(g => {
     const items = groupItems(g);
-    const done = items.filter(r => st(r.kanji).k).length;
+    const done = items.filter(r => st(r.kanji).t).length;
     const pct = items.length ? Math.round(done / items.length * 100) : 0;
     return `<button class="group-card" data-g="${g}">
       <span class="gname">グループ${GROUP_MARKS[g - 1]}</span>
       <span class="gprev">${items.slice(0, 10).map(r => r.kanji).join("")}</span>
-      <span class="gmeta">${items.length}字 ・ くみたて マスター ${done} / ${items.length}字</span>
+      <span class="gmeta">${items.length}字 ・ しゅうとく ${done} / ${items.length}字</span>
       <span class="gtrack"><i style="width:${pct}%"></i></span></button>`;
   }).join("");
   grid.querySelectorAll(".group-card").forEach(b => b.addEventListener("click", () => { sndTap(); startTest(Number(b.dataset.g)); }));
@@ -613,9 +614,11 @@ function testJudge(rec, allOk){
   if(allOk){
     TEST.firstTry++;
     setSt(rec.kanji, "k");
+    setSt(rec.kanji, "t");
     store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
     sndGood(); setGuide("happy", "せいかい！ 一回で 組み立てられたね。");
   } else {
+    clearSt(rec.kanji, "t");
     if(!store.mistakes.includes(rec.kanji)){ store.mistakes.push(rec.kanji); saveStore(); }
     TEST.wrong.push(rec.kanji);
     sndBad(); setGuide("think", "ざんねん…。正しい 組み立てを 見てみよう。");
@@ -690,6 +693,18 @@ function init(){
   const updSound = () => bs.textContent = store.sound ? "🔊 おと オン" : "🔇 おと オフ";
   updSound();
   bs.addEventListener("click", () => { store.sound = !store.sound; saveStore(); updSound(); if(store.sound) sndTap(); });
+  const br = document.getElementById("btnReset");
+  let resetArmed = false, resetTimer = null;
+  br.addEventListener("click", () => {
+    if(!resetArmed){
+      resetArmed = true; br.textContent = "ほんとうに けす？";
+      resetTimer = setTimeout(() => { resetArmed = false; br.textContent = "きろく リセット"; }, 3000);
+      return;
+    }
+    clearTimeout(resetTimer);
+    try{ localStorage.removeItem(LS_KEY); }catch(e){ }
+    location.reload();
+  });
   document.querySelectorAll("[data-back]").forEach(b => b.addEventListener("click", () => {
     if(b.dataset.back === "top"){ renderTop(); showView("view-top"); }
     else { renderGrade(); showView("view-grade"); }

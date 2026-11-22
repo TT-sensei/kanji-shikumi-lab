@@ -305,13 +305,20 @@ RADICAL_VARIANTS = {9:["亻","人"],85:["氵","水"],64:["扌","手"],96:["玉",
     105:["癶"],107:["皮"],108:["皿"],123:["羊"],143:["血"],145:["衣","衤"],151:["豆"],158:["身"],
     161:["辰"],163:["邑"],164:["酉"],170:["阜"],172:["隹"],176:["面"],209:["鼻"]}
 
+TARE_ELS = {"广", "厂", "疒", "尸"}  # 本物の「たれ」になる部品（囲みとして扱う）
 def derive_structure(comps):
     if len(comps) <= 1:
         return "single"
     pos = [c["pos"] for c in comps]
-    if any(p == "kamae" for p in pos):
+    if any(p in ("kamae", "kamaec") for p in pos):
+        return "enclose"
+    if any(p == "nyo" for p in pos):
+        return "enclose"
+    if comps[0]["pos"] == "tare" and comps[0]["el"] in TARE_ELS:
         return "enclose"
     if any(p in ("top", "bottom") for p in pos):
+        return "vertical"
+    if any(p in ("tare", "tarec") for p in pos):
         return "vertical"
     if any(p in ("left", "right") for p in pos):
         return "horizontal"
@@ -370,6 +377,11 @@ print("problems:", problems)
 for r in records:
     comps = " ".join(f"{c['el']}@{c['pos'] or '-'}{'R' if c['rad'] else ''}({len(c['d'])})" for c in r["components"])
     print(f"{r['kanji']} 部{r['radicalNo']}{r['radicalName']}/{r['radicalPosType']} {r['structure']:10s} | {comps}")
+for _i, _r in enumerate(records):
+    if _r["radicalState"] == "whole" and len(_r["components"]) > 1:
+        for _c in _r["components"]:
+            _c["rad"] = False
+    _r["group"] = min(4, _i * 4 // len(records) + 1)
 (OUT / "kanji1.json").write_text(json.dumps(records, ensure_ascii=False, indent=1), encoding="utf-8")
 (OUT / "radicals.json").write_text(json.dumps(RADICAL_NAMES, ensure_ascii=False, indent=1), encoding="utf-8")
 print("wrote kanji1.json", (OUT / "kanji1.json").stat().st_size, "bytes")
@@ -606,6 +618,11 @@ print("G2 comp counts:", Counter(len(r["components"]) for r in records2))
 print("G2 radical states:", Counter(r["radicalState"] for r in records2))
 print("G2 unmatched (fallback to KanjiVG top-level):", len(unmatched2), unmatched2)
 print("G2 empty radicalName:", [r["kanji"] for r in records2 if not r["radicalName"]])
+for _i, _r in enumerate(records2):
+    if _r["radicalState"] == "whole" and len(_r["components"]) > 1:
+        for _c in _r["components"]:
+            _c["rad"] = False
+    _r["group"] = min(4, _i * 4 // len(records2) + 1)
 (OUT / "kanji2.json").write_text(json.dumps(records2, ensure_ascii=False, indent=1), encoding="utf-8")
 (OUT / "kanji2.js").write_text("window.KSL_G2=" + json.dumps(records2, ensure_ascii=False) + ";", encoding="utf-8")
 _txt2 = Path(__file__).resolve().parent.parent / "original" / "text2.json"
@@ -730,6 +747,11 @@ print("G3 comp counts:", Counter(len(r["components"]) for r in records3))
 print("G3 radical states:", Counter(r["radicalState"] for r in records3))
 print("G3 unmatched (fallback to KanjiVG top-level):", len(unmatched3), unmatched3)
 print("G3 empty radicalName:", [r["kanji"] for r in records3 if not r["radicalName"]])
+for _i, _r in enumerate(records3):
+    if _r["radicalState"] == "whole" and len(_r["components"]) > 1:
+        for _c in _r["components"]:
+            _c["rad"] = False
+    _r["group"] = min(4, _i * 4 // len(records3) + 1)
 (OUT / "kanji3.json").write_text(json.dumps(records3, ensure_ascii=False, indent=1), encoding="utf-8")
 (OUT / "kanji3.js").write_text("window.KSL_G3=" + json.dumps(records3, ensure_ascii=False) + ";", encoding="utf-8")
 _txt3 = Path(__file__).resolve().parent.parent / "original" / "text3.json"

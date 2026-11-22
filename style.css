@@ -204,3 +204,5 @@ svg .comp.dim{opacity:.18;}
 .group-card .gtrack i{display:block; height:100%; background:var(--primary); border-radius:99px;}
 .test-score{font-size:64px; font-weight:800; color:var(--primary-d);}
 .test-score span{font-size:26px; color:#5a6a94;}
+
+.marks-legend{font-size:13px; color:#5a6580; margin:0 0 8px;}
