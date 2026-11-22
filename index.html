@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>漢字のしくみラボ（仮称）</title>
+<link rel="stylesheet" href="https://tt-sensei.github.io/edu-effects/css/edu-effects-library.css">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -63,10 +64,24 @@
       <h2 id="playTitle"></h2>
       <div id="playProgress" class="play-progress"></div>
     </div>
+    <div class="guide-bar">
+      <img id="guideImg" src="https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/01-normal-smile.webp" alt="かい" onerror="this.style.visibility='hidden'">
+      <div class="guide-line" id="guideLine">いっしょに 漢字の しくみを 見てみよう！</div>
+    </div>
     <div class="play-wrap">
       <div class="card stage-card" id="playStage"></div>
       <div class="card panel-card" id="playPanel"></div>
     </div>
+  </section>
+
+  <!-- テスト：グループ選択 -->
+  <section id="view-testgroups" class="view hidden">
+    <div class="view-head">
+      <button class="backbtn" data-back="grade">← もどる</button>
+      <h2><ruby>テスト<rt>てすと</rt></ruby> ： グループを えらんでね</h2>
+    </div>
+    <p class="test-note">かんじマスターと 同じ 4つの グループ分け。グループの 中から ランダムに 出るよ。テストでは おぼえうたは おやすみ。</p>
+    <div id="testGroupGrid" class="group-grid"></div>
   </section>
 
   <!-- パーツずかん -->
@@ -102,6 +117,7 @@
 <script src="data/kanji2.js"></script>
 <script src="original/text1.js"></script>
 <script src="original/text2.js"></script>
+<script src="https://tt-sensei.github.io/edu-effects/js/edu-effects.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

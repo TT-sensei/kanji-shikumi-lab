@@ -15,7 +15,8 @@ const MODES = {
   bunkai:{name:"分解", ruby:"ぶんかい", icon:"🔍", desc:"パーツに 分けて 見る"},
   kumitate:{name:"組み立て", ruby:"くみたて", icon:"🧩", desc:"パーツを 選んで 漢字を 作る"},
   kozo:{name:"構造", ruby:"こうぞう", icon:"🏗️", desc:"形の タイプを 当てる"},
-  bushu:{name:"部首", ruby:"ぶしゅ", icon:"📚", desc:"部首を 見つける・当てる"}
+  bushu:{name:"部首", ruby:"ぶしゅ", icon:"📚", desc:"部首を 見つける・当てる"},
+  test:{name:"テスト", ruby:"てすと", icon:"📝", desc:"グループから ランダムに 組み立て"}
 };
 const MODE_KEY = {bunkai:"b", kumitate:"k", kozo:"s", bushu:"r"};
 
@@ -34,8 +35,23 @@ function setSt(kanji, key){
 function masteredCount(data){ return (data || DATA).filter(r => st(r.kanji).k).length; }
 function modeCount(mode){ const k = MODE_KEY[mode]; return DATA.filter(r => st(r.kanji)[k]).length; }
 
-/* ---------- 音 ---------- */
-let audioCtx = null;
+/* ---------- 音（sounds-recipe-。読み込めなくても学習は続ける） ---------- */
+let audioCtx = null, soundMod = null;
+import("https://tt-sensei.github.io/sounds-recipe-/sounds.js").then(m => { soundMod = m; }).catch(() => { });
+function playSnd(id){
+  if(!store.sound) return;
+  if(soundMod){
+    try{
+      if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if(audioCtx.state === "suspended") audioCtx.resume();
+      soundMod.playSound(audioCtx, id, 0.5);
+      return;
+    }catch(e){ }
+  }
+  if(id === "correct" || id === "clear"){ beep(659,0,0.16); beep(880,0.12,0.26); }
+  else if(id === "wrong"){ beep(196,0,0.22,"triangle"); }
+  else beep(520,0,0.07);
+}
 function beep(freq, t0, dur, type){
   if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   const o = audioCtx.createOscillator(), g = audioCtx.createGain();
@@ -46,9 +62,9 @@ function beep(freq, t0, dur, type){
   o.connect(g); g.connect(audioCtx.destination);
   o.start(audioCtx.currentTime + t0); o.stop(audioCtx.currentTime + t0 + dur + 0.05);
 }
-function sndGood(){ if(store.sound){ beep(659,0,0.16); beep(880,0.12,0.26); } }
-function sndBad(){ if(store.sound){ beep(196,0,0.22,"triangle"); } }
-function sndTap(){ if(store.sound){ beep(520,0,0.07); } }
+function sndGood(){ playSnd("correct"); }
+function sndBad(){ playSnd("wrong"); }
+function sndTap(){ playSnd("click"); }
 
 /* ---------- エフェクト ---------- */
 function burst(){
@@ -64,6 +80,31 @@ function burst(){
     fx.appendChild(s); setTimeout(() => s.remove(), 950);
   }
 }
+
+function celebrate(){
+  try{ if(window.EduEffects){ EduEffects.confetti(document.body, 60); return; } }catch(e){ }
+  burst();
+}
+
+/* ---------- ガイド（ナビキャラ：かい） ---------- */
+const FACE = {
+  normal: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/01-normal-smile.webp",
+  happy: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/02-happy.webp",
+  think: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/03-thinking.webp",
+  celeb: "https://tt-sensei.github.io/navi-character-/assets/web/characters/kai/expressions/08-celebrating.webp"
+};
+function setGuide(face, line){
+  const img = document.getElementById("guideImg");
+  if(img){ img.style.visibility = "visible"; img.src = FACE[face] || FACE.normal; }
+  const gl = document.getElementById("guideLine");
+  if(gl && line != null) gl.textContent = line;
+}
+const GUIDE_OPEN = {
+  bunkai: "パーツを タップして、漢字の しくみを 見てみよう！",
+  kumitate: "おぼえうたを たよりに、パーツを 組み立ててみよう！",
+  kozo: "この 漢字の つくりは どれかな？ よく 見て 考えよう。",
+  bushu: "どの パーツが 部首に なるか、考えてみよう。"
+};
 
 /* ---------- SVG ---------- */
 function pathsOf(comp){ return comp.d.map(d => `<path d="${d}"/>`).join(""); }
@@ -144,7 +185,7 @@ function svgPart(comp, color){
 }
 
 /* ---------- 画面切り替え ---------- */
-const VIEWS = ["view-top","view-grade","view-picker","view-play","view-parts","view-sources"];
+const VIEWS = ["view-top","view-grade","view-picker","view-play","view-parts","view-sources","view-testgroups"];
 function showView(id){
   VIEWS.forEach(v => document.getElementById(v).classList.toggle("hidden", v !== id));
   window.scrollTo(0, 0);
@@ -226,9 +267,13 @@ function renderGrade(){
       <span class="micon">${M.icon}</span>
       <span class="mname"><ruby>${M.name}<rt>${M.ruby}</rt></ruby></span>
       <span class="mdesc">${M.desc}</span>
-      <span class="mdone">できた ${modeCount(m)} / ${DATA.length}</span></button>`;
+      <span class="mdone">${m === "test" ? "グループ 4つから ランダム" : `できた ${modeCount(m)} / ${DATA.length}`}</span></button>`;
   }).join("");
-  mg.querySelectorAll(".mode-card").forEach(b => b.addEventListener("click", () => { sndTap(); renderPicker(b.dataset.mode); }));
+  mg.querySelectorAll(".mode-card").forEach(b => b.addEventListener("click", () => {
+    sndTap();
+    if(b.dataset.mode === "test") renderTestGroups();
+    else renderPicker(b.dataset.mode);
+  }));
   const nl = document.getElementById("nigateList");
   if(store.mistakes.length){
     nl.innerHTML = store.mistakes.map(k => `<button class="chip" data-k="${k}">${k}</button>`).join("");
@@ -263,11 +308,15 @@ function renderPicker(mode){
 
 /* ---------- プレイ共通 ---------- */
 let playMode = null, playKanji = null;
+let playBackFn = () => renderPicker(playMode || "bunkai");
 function startPlay(mode, kanji){
   playMode = mode; playKanji = kanji;
+  TEST.active = false;
+  playBackFn = () => renderPicker(mode);
   const rec = recOf(kanji), M = MODES[mode];
   document.getElementById("playTitle").innerHTML = `<ruby>${M.name}<rt>${M.ruby}</rt></ruby> ： ${kanji}`;
   document.getElementById("playProgress").textContent = `${M.ruby} ${modeCount(mode)} / ${DATA.length}`;
+  setGuide("normal", GUIDE_OPEN[mode] || "");
   showView("view-play");
   if(mode === "bunkai") playBunkai(rec);
   else if(mode === "kumitate") playKumitate(rec);
@@ -358,6 +407,7 @@ function playBunkai(rec){
       document.getElementById("playProgress").textContent = `ぶんかい ${modeCount("bunkai")} / ${DATA.length}`;
     }
     if(tapped.size >= rec.components.length){
+      setGuide("happy", "ぜんぶの パーツが 分かったね！ その字の しくみが 見えたね。");
       const r = document.getElementById("bunkaiResult");
       if(r && !r.innerHTML) { r.innerHTML = finishPanel(`<div class="result-good">ぜんぶの パーツを 見つけたね！</div>`); wireFinish(); }
     }
@@ -366,7 +416,8 @@ function playBunkai(rec){
 
 /* ---------- 組み立て ---------- */
 function shuffle(a){ for(let i = a.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
-function playKumitate(rec){
+function playKumitate(rec, opts){
+  const isTest = !!(opts && opts.test);
   const stage = document.getElementById("playStage");
   const panel = document.getElementById("playPanel");
   const own = rec.components.map((c, i) => ({key: labelOf(c) + "|" + c.pos, el: c.el, label: labelOf(c), pos: c.pos, d: c.d, own:true, id:"own" + i}));
@@ -423,22 +474,23 @@ function playKumitate(rec){
   function renderAll(){ renderSlots(); renderPalette(); }
   panel.innerHTML = `
     <div class="info-box"><div class="ib-title">やり方</div><div class="ib-sub">読みと 文を ヒントに、正しい パーツを 選んで 置こう。パーツの 置く 場所（うえ・した・ひだり・みぎ）も 合わせてね。</div></div>
-    ${chantBox(rec, false)}
+    ${isTest ? "" : chantBox(rec, false)}
     <div class="palette" id="palette"></div>
     <div id="judgeArea"><button class="bigbtn" id="btnJudge" disabled>できた！</button></div>`;
   renderAll();
   document.getElementById("btnJudge").addEventListener("click", () => {
     const allOk = placed.every((p, i) => p && p.key === own[i].key);
+    if(isTest){ testJudge(rec, allOk); return; }
     if(allOk){
       setSt(rec.kanji, "k");
       store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
-      sndGood(); burst();
+      sndGood(); celebrate(); setGuide("celeb", `「${rec.kanji}」が できた！ マスターだね。`);
       stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="result-good">「${rec.kanji}」が できた！ マスター ★</div>`;
       panel.innerHTML = chantBox(rec, true) + finishPanel("");
       wireFinish();
       document.getElementById("playProgress").textContent = `くみたて ${modeCount("kumitate")} / ${DATA.length}`;
     } else {
-      sndBad();
+      sndBad(); setGuide("think", "うーん、ちがう パーツが あるみたい。赤い わくと、場所を 見直してみよう。");
       if(!store.mistakes.includes(rec.kanji)){ store.mistakes.push(rec.kanji); saveStore(); }
       document.querySelectorAll(".slot2").forEach((s, i) => {
         if(placed[i] && placed[i].key !== own[i].key) s.classList.add("badslot");
@@ -458,7 +510,7 @@ function playKozo(rec){
     `<button class="optbtn" data-s="${s}">${STRUCT_JA[s]}</button>`).join("")}</div>${chantBox(rec, false)}<div id="kozoResult"></div>`;
   panel.querySelectorAll(".optbtn").forEach(b => b.addEventListener("click", () => {
     if(b.dataset.s === rec.structure){
-      b.classList.add("correct"); sndGood();
+      b.classList.add("correct"); sndGood(); setGuide("happy", "そのとおり！ 形の タイプが 分かったね。");
       panel.querySelectorAll(".optbtn").forEach(x => x.disabled = true);
       setSt(rec.kanji, "s");
       stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="ib-sub">${esc(formulaOf(rec))}</div>`;
@@ -468,7 +520,7 @@ function playKozo(rec){
       wireFinish();
       document.getElementById("playProgress").textContent = `こうぞう ${modeCount("kozo")} / ${DATA.length}`;
     } else {
-      b.classList.add("wrong"); b.disabled = true; sndBad();
+      b.classList.add("wrong"); b.disabled = true; sndBad(); setGuide("think", "うーん、ちがうみたい。形を もう一度 見てみよう。");
       setTimeout(() => b.classList.remove("wrong"), 350);
     }
   }));
@@ -485,7 +537,7 @@ function playBushu(rec){
     `<button class="optbtn" data-n="${esc(n)}">${esc(n)}</button>`).join("")}</div>${chantBox(rec, false)}<div id="bushuResult"></div>`;
   panel.querySelectorAll(".optbtn").forEach(b => b.addEventListener("click", () => {
     if(b.dataset.n === rec.radicalName){
-      b.classList.add("correct"); sndGood();
+      b.classList.add("correct"); sndGood(); setGuide("happy", "せいかい！ 部首が 分かったね。");
       panel.querySelectorAll(".optbtn").forEach(x => x.disabled = true);
       setSt(rec.kanji, "r");
       const stateNote = rec.radicalState === "whole" ? "この字は、字 そのものが 部首だよ"
@@ -499,10 +551,91 @@ function playBushu(rec){
       wireFinish();
       document.getElementById("playProgress").textContent = `ぶしゅ ${modeCount("bushu")} / ${DATA.length}`;
     } else {
-      b.classList.add("wrong"); b.disabled = true; sndBad();
+      b.classList.add("wrong"); b.disabled = true; sndBad(); setGuide("think", "部首は、漢字を 分類する 名前だよ。パーツを 見直してみよう。");
       setTimeout(() => b.classList.remove("wrong"), 350);
     }
   }));
+}
+
+/* ---------- テスト（かんじマスターと同じ4グループ分け） ---------- */
+const TEST = {active:false, group:0, items:[], idx:0, firstTry:0, wrong:[]};
+const GROUP_MARKS = ["①","②","③","④"];
+function groupItems(g){
+  const start = Math.floor((g - 1) * DATA.length / 4);
+  const end = Math.floor(g * DATA.length / 4);
+  return DATA.slice(start, end);
+}
+function renderTestGroups(){
+  const grid = document.getElementById("testGroupGrid");
+  grid.innerHTML = [1,2,3,4].map(g => {
+    const items = groupItems(g);
+    const done = items.filter(r => st(r.kanji).k).length;
+    const pct = items.length ? Math.round(done / items.length * 100) : 0;
+    return `<button class="group-card" data-g="${g}">
+      <span class="gname">グループ${GROUP_MARKS[g - 1]}</span>
+      <span class="gprev">${items.slice(0, 10).map(r => r.kanji).join("")}</span>
+      <span class="gmeta">${items.length}字 ・ くみたて マスター ${done} / ${items.length}字</span>
+      <span class="gtrack"><i style="width:${pct}%"></i></span></button>`;
+  }).join("");
+  grid.querySelectorAll(".group-card").forEach(b => b.addEventListener("click", () => { sndTap(); startTest(Number(b.dataset.g)); }));
+  showView("view-testgroups");
+}
+function startTest(g){
+  TEST.active = true; TEST.group = g;
+  TEST.items = shuffle(groupItems(g).slice());
+  TEST.idx = 0; TEST.firstTry = 0; TEST.wrong = [];
+  playBackFn = () => { TEST.active = false; renderTestGroups(); };
+  showView("view-play");
+  nextTestQuestion();
+}
+function nextTestQuestion(){
+  if(TEST.idx >= TEST.items.length){ finishTest(); return; }
+  const rec = TEST.items[TEST.idx];
+  playMode = "test"; playKanji = rec.kanji;
+  document.getElementById("playTitle").innerHTML = `<ruby>テスト<rt>てすと</rt></ruby> ： グループ${GROUP_MARKS[TEST.group - 1]}`;
+  document.getElementById("playProgress").textContent = `${TEST.idx + 1} / ${TEST.items.length} 問目`;
+  setGuide("normal", TEST.idx === 0 ? "テストだよ。おぼえうたは おやすみ。自分の 力で 組み立てよう！" : "つぎの 漢字だよ。");
+  playKumitate(rec, {test:true});
+}
+function testJudge(rec, allOk){
+  if(allOk){
+    TEST.firstTry++;
+    setSt(rec.kanji, "k");
+    store.mistakes = store.mistakes.filter(k => k !== rec.kanji); saveStore();
+    sndGood(); setGuide("happy", "せいかい！ 一回で 組み立てられたね。");
+  } else {
+    if(!store.mistakes.includes(rec.kanji)){ store.mistakes.push(rec.kanji); saveStore(); }
+    TEST.wrong.push(rec.kanji);
+    sndBad(); setGuide("think", "ざんねん…。正しい 組み立てを 見てみよう。");
+  }
+  const stage = document.getElementById("playStage");
+  const panel = document.getElementById("playPanel");
+  stage.innerHTML = svgKanji(rec, {colored:true}) + `<div class="${allOk ? "result-good" : "result-bad"}">${allOk ? "○ せいかい！" : "× ざんねん"} 「${rec.kanji}」</div>`;
+  panel.innerHTML = chantBox(rec, true) + `<button class="bigbtn" id="btnTestNext">${TEST.idx + 1 >= TEST.items.length ? "けっかを 見る →" : "つぎの 漢字 →"}</button>`;
+  document.getElementById("btnTestNext").addEventListener("click", () => { sndTap(); TEST.idx++; nextTestQuestion(); });
+}
+function finishTest(){
+  TEST.active = false;
+  playBackFn = () => renderTestGroups();
+  const total = TEST.items.length, ok = TEST.firstTry;
+  const stage = document.getElementById("playStage");
+  const panel = document.getElementById("playPanel");
+  document.getElementById("playProgress").textContent = "テスト おわり";
+  setGuide("celeb", ok === total ? "パーフェクト！ 全部 一回で できたね！" : "テスト おつかれさま！ まちがえた字は 分解で 見直そう。");
+  celebrate();
+  stage.innerHTML = `<div class="test-score">${ok} <span>/ ${total} 問</span></div><div class="result-good">一回で 組み立てられた かず</div>`;
+  let html = "";
+  if(TEST.wrong.length){
+    html += `<div class="info-box"><div class="ib-title">まちがえた かんじ（タップで 分解を 見る）</div><div class="chip-row">${TEST.wrong.map(k => `<button class="chip" data-k="${k}">${k}</button>`).join("")}</div></div>`;
+  } else {
+    html += `<div class="info-box"><div class="ib-sub">まちがえた字は ありませんでした。</div></div>`;
+  }
+  html += `<button class="bigbtn" id="btnTestRetry">もう一度 この グループ</button>
+    <button class="bigbtn sub" id="btnTestGroups">グループを えらぶ</button>`;
+  panel.innerHTML = html;
+  panel.querySelectorAll(".chip").forEach(c => c.addEventListener("click", () => gotoKanji({kanji: c.dataset.k, grade: curGrade})));
+  document.getElementById("btnTestRetry").addEventListener("click", () => { sndTap(); startTest(TEST.group); });
+  document.getElementById("btnTestGroups").addEventListener("click", () => { sndTap(); renderTestGroups(); });
 }
 
 /* ---------- パーツずかん ---------- */
@@ -547,9 +680,7 @@ function init(){
     if(b.dataset.back === "top"){ renderTop(); showView("view-top"); }
     else { renderGrade(); showView("view-grade"); }
   }));
-  document.getElementById("btnPlayBack").addEventListener("click", () => {
-    renderPicker(playMode || "bunkai");
-  });
+  document.getElementById("btnPlayBack").addEventListener("click", () => { playBackFn(); });
   showView("view-top");
 }
 document.addEventListener("DOMContentLoaded", init);
